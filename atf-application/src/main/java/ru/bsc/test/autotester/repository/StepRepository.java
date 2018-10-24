@@ -16,19 +16,19 @@
  * limitations under the License.
  */
 
-package ru.bsc.test.autotester.ro;
+package ru.bsc.test.autotester.repository;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.bsc.test.at.executor.model.Step;
+
+import java.util.List;
 
 /**
- * Created by smakarov
- * 12.04.2018 17:18
+ * Created by sdoroshin on 27.10.2017.
+ *
  */
-@Getter
-@Setter
-public class ScenarioIdentityRo {
-    private String projectCode;
-    private String group;
-    private String code;
+@Repository
+public interface StepRepository extends JpaRepository<Step, Long> {
+    List<Step> findByRelativeUrl(String relativeUrl);
 }

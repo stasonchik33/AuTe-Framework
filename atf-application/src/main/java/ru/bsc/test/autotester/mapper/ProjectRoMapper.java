@@ -53,6 +53,7 @@ public abstract class ProjectRoMapper {
     abstract public ProjectRo projectToProjectRo(Project project);
 
     @Mappings({
+            @Mapping(target = "id", source = "id"),
             @Mapping(target = "code", source = "code"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "beforeScenarioPath", source = "beforeScenarioPath"),
@@ -98,10 +99,8 @@ public abstract class ProjectRoMapper {
     })
     abstract ScenarioRo scenarioToScenarioRoInner(Scenario scenario);
 
-    public ScenarioRo scenarioToScenarioRo(String projectCode, Scenario scenario) {
-        ScenarioRo scenarioRo = scenarioToScenarioRoInner(scenario);
-        scenarioRo.setProjectCode(projectCode);
-        return scenarioRo;
+    public ScenarioRo scenarioToScenarioRo(Scenario scenario) {
+        return scenarioToScenarioRoInner(scenario);
     }
 
     public abstract List<ScenarioRo> convertScenarioListToScenarioRoList(List<Scenario> scenarioList);

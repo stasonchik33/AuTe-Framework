@@ -21,9 +21,23 @@ package ru.bsc.test.at.executor.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 @Getter
 @Setter
+@Entity
+@Table(name = "mane_value_property")
 public class NameValueProperty {
+
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "mq_message_id")
+    private MqMessage mqMessage;
     private String name;
     private String value;
 

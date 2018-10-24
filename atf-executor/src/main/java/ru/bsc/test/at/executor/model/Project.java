@@ -24,25 +24,39 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * Created by sdoroshin on 10.05.2017.
  */
 @Getter
 @Setter
+@Entity
+@Table(name = "project")
 public class Project implements Serializable, AbstractModel {
     private static final long serialVersionUID = 7331632683933716938L;
 
+    @Id
+    private Long id;
     private String code;
     private String name;
+    @OneToMany(mappedBy = "project")
     private List<Scenario> scenarioList = new LinkedList<>();
-    private String beforeScenarioPath;
-    private String afterScenarioPath;
+    @ManyToOne
+    @JoinColumn(name = "before_scenario_path")
+    private Scenario beforeScenario;
+    @ManyToOne
+    @JoinColumn(name = "after_scenario_path")
+    private Scenario afterScenario;
     private Stand stand;
     private Boolean useRandomTestId;
     private String testIdHeaderName;
     private AmqpBroker amqpBroker;
-    private List<String> groupList;
     private Long mqCheckInterval;
     private Integer mqCheckCount;
 
@@ -59,13 +73,6 @@ public class Project implements Serializable, AbstractModel {
                 Scenario projectScenario = scenario.copy();
                 projectScenario.setScenarioGroup(scenario.getScenarioGroup());
                 project.getScenarioList().add(projectScenario);
-            }
-        }
-
-        if (getGroupList() != null) {
-            project.setGroupList(new LinkedList<>());
-            for (String group : getGroupList()) {
-                project.getGroupList().add(group);
             }
         }
 

@@ -20,12 +20,24 @@ package ru.bsc.test.at.executor.model;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Data
+@Entity
+@Table(name = "sql_data")
 public class SqlData implements Serializable, AbstractModel {
     private static final long serialVersionUID = -5297373310164570345L;
 
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private Step step;
     private String sql;
     private String sqlSavedParameter;
     private SqlResultType sqlReturnType = SqlResultType.MAP;

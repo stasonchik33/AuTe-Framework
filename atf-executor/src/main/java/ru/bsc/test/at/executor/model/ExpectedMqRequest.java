@@ -21,9 +21,23 @@ package ru.bsc.test.at.executor.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 @Getter
 @Setter
+@Entity
+@Table(name = "expected_mq_request")
 public class ExpectedMqRequest implements CodeAccessible{
+
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private Step step;
     private String code;
     private String sourceQueue;
     private String requestBody;

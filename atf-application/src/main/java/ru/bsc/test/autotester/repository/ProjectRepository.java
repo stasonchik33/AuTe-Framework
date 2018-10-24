@@ -18,6 +18,8 @@
 
 package ru.bsc.test.autotester.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ru.bsc.test.at.executor.model.Project;
 
 import java.util.List;
@@ -27,7 +29,8 @@ import java.util.List;
  *
  */
 
-public interface ProjectRepository {
+@Repository
+public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findAllProjects();
 

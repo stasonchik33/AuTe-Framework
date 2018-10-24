@@ -31,8 +31,8 @@ import java.util.List;
 public class ScenarioRo implements AbstractRo {
     private static final long serialVersionUID = -6026744701723398082L;
 
+    private Long id;
     private String code;
-    private String projectCode;
     private String name;
 
     private String scenarioGroup;

@@ -21,6 +21,12 @@ package ru.bsc.test.at.executor.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,10 +35,18 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Entity
+@Table(name = "mq_mock")
 public class MqMock implements AbstractModel, CodeAccessible {
 
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private Step step;
     private String code;
     private String sourceQueueName;
+    @OneToMany(mappedBy = "mqMock")
     private List<MqMockResponse> responses = new LinkedList<>();
     private String httpUrl;
     private String xpath;

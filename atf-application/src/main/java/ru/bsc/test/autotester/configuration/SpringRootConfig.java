@@ -18,10 +18,13 @@
 
 package ru.bsc.test.autotester.configuration;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import ru.bsc.test.at.util.YamlUtils;
 import ru.bsc.test.autotester.properties.EnvironmentProperties;
 
@@ -31,8 +34,11 @@ import java.io.IOException;
 /**
  * Created by sdoroshin on 21.03.2017.
  */
+@EnableWebMvc
 @Configuration
 @ComponentScan("ru.bsc.test.autotester")
+@EnableJpaRepositories(basePackages = "ru.bsc.test.autotester.repository")
+@EntityScan("ru.bsc")
 public class SpringRootConfig {
 
     @Bean

@@ -21,13 +21,25 @@ package ru.bsc.test.at.executor.model;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Data
+@Entity
+@Table(name = "scenario_variable_from_mq_request")
 public class ScenarioVariableFromMqRequest implements Serializable, AbstractModel {
 
     private static final long serialVersionUID = 5716534964482145701L;
 
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private Step step;
     private String sourceQueue;
     private String xpath;
     private String variableName;

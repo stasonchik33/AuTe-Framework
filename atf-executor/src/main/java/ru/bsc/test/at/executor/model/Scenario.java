@@ -21,6 +21,12 @@ package ru.bsc.test.at.executor.model;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,12 +35,22 @@ import java.util.List;
  * Created by sdoroshin on 10.05.2017.
  */
 @Data
+@Entity
+@Table(name = "scenario")
 public class Scenario implements Serializable, AbstractModel {
     private static final long serialVersionUID = -3442194270361216323L;
+
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     private String code;
     private String name;
     private String scenarioGroup;
+
+    @OneToMany(mappedBy = "scenario")
     private List<Step> stepList = new LinkedList<>();
     private Boolean beforeScenarioIgnore;
     private Boolean afterScenarioIgnore;

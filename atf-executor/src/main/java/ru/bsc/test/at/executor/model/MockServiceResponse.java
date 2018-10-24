@@ -22,6 +22,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +37,15 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = "code")
+@Entity
+@Table(name = "mock_service_response")
 public class MockServiceResponse implements AbstractModel {
 
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private Step step;
     private String code;
     private String serviceUrl;
     private String responseBody;
@@ -42,6 +55,7 @@ public class MockServiceResponse implements AbstractModel {
     private String userName;
     private String password;
     private String pathFilter;
+    @OneToMany(mappedBy = "mockServiceResponse")
     private List<HeaderItem> headers;
 
     protected MockServiceResponse copy() {

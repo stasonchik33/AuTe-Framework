@@ -23,6 +23,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,12 +39,20 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Entity
+@Table(name = "mq_message")
 public class MqMessage implements Serializable, AbstractModel {
     private static final long serialVersionUID = -2284237307005166339L;
 
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private Step step;
     private String queueName;
     private String message;
     private String messageFile;
+    @OneToMany(mappedBy = "mqMessage")
     private List<NameValueProperty> properties = new LinkedList<>();
 
     public MqMessage copy() {

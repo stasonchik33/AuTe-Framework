@@ -21,6 +21,16 @@ package ru.bsc.test.at.executor.model;
 import lombok.Data;
 import ru.bsc.test.at.executor.helper.client.impl.http.HTTPMethod;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,10 +41,19 @@ import java.util.Map;
  * Created by sdoroshin on 10.05.2017.
  */
 @Data
+@Entity
+@Table(name = "step")
 public class Step implements Serializable, AbstractModel {
     private static final long serialVersionUID = 1670286319126044952L;
 
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "scenario_id")
+    private Scenario scenario;
+
     private String code;
+    @OneToMany(mappedBy = "step")
     private List<ExpectedServiceRequest> expectedServiceRequests = new LinkedList<>();
     private String relativeUrl;
     private HTTPMethod requestMethod;
@@ -49,14 +68,22 @@ public class Step implements Serializable, AbstractModel {
     private RequestBodyType requestBodyType = RequestBodyType.JSON;
     private Boolean usePolling;
     private String pollingJsonXPath;
+    @OneToMany(mappedBy = "step")
     private List<MockServiceResponse> mockServiceResponseList = new LinkedList<>();
     private Boolean disabled;
     private String stepComment;
+    @ElementCollection(targetClass = String.class)
+    @CollectionTable(name = "saved_values_check")
+    @MapKeyColumn(name = "key")
+    @Column(name = "value")
     private Map<String, String> savedValuesCheck = new HashMap<>();
     private ResponseCompareMode responseCompareMode = ResponseCompareMode.JSON;
+    @OneToMany(mappedBy = "step")
     private List<StepParameterSet> stepParameterSetList = new LinkedList<>();
+    @OneToMany(mappedBy = "step")
     private List<MqMessage> mqMessages = new LinkedList<>();
     private Boolean multipartFormData;
+    @OneToMany(mappedBy = "step")
     private List<FormData> formDataList = new LinkedList<>();
     private String jsonCompareMode = "NON_EXTENSIBLE";
     private String script;
@@ -65,9 +92,13 @@ public class Step implements Serializable, AbstractModel {
     private String parseMockRequestXPath;
     private String parseMockRequestScenarioVariable;
     private String timeoutMs;
+    @OneToMany(mappedBy = "step")
     private List<MqMock> mqMockResponseList = new LinkedList<>();
+    @OneToMany(mappedBy = "step")
     private List<ExpectedMqRequest> expectedMqRequestList;
+    @OneToMany(mappedBy = "step")
     private List<SqlData> sqlDataList = new LinkedList<>();
+    @OneToMany(mappedBy = "step")
     private List<ScenarioVariableFromMqRequest> scenarioVariableFromMqRequestList;
     private StepMode stepMode;
 
@@ -81,8 +112,6 @@ public class Step implements Serializable, AbstractModel {
     private String mqMessage;
     @Deprecated
     private String mqMessageFile;
-    @Deprecated
-    private List<NameValueProperty> mqPropertyList = new LinkedList<>();
 
     // JMS step mode
     private String mqOutputQueueName;
@@ -134,12 +163,6 @@ public class Step implements Serializable, AbstractModel {
         if (getMqMessages() != null) {
             step.setMqMessages(new LinkedList<>());
             getMqMessages().forEach(info -> step.getMqMessages().add(info.copy()));
-        }
-        if (getMqPropertyList() != null) {
-            step.setMqPropertyList(new LinkedList<>());
-            for (NameValueProperty property : getMqPropertyList()) {
-                step.getMqPropertyList().add(property.copy());
-            }
         }
         if (getSqlDataList() != null) {
             step.setSqlDataList(new LinkedList<>());

@@ -35,7 +35,9 @@ import ru.bsc.test.autotester.mapper.StepRoMapper;
 import ru.bsc.test.autotester.model.ExecutionResult;
 import ru.bsc.test.autotester.properties.EnvironmentProperties;
 import ru.bsc.test.autotester.report.AbstractReportGenerator;
+import ru.bsc.test.autotester.repository.ProjectRepository;
 import ru.bsc.test.autotester.repository.ScenarioRepository;
+import ru.bsc.test.autotester.repository.StepRepository;
 import ru.bsc.test.autotester.ro.*;
 import ru.bsc.test.autotester.service.ProjectService;
 import ru.bsc.test.autotester.service.ScenarioService;
@@ -58,7 +60,6 @@ import java.util.zip.ZipOutputStream;
 @Service
 @Slf4j
 public class ScenarioServiceImpl implements ScenarioService {
-    private static final String DEFAULT_GROUP = "__default";
     //@formatter:off
     private static final TypeReference<List<StepResult>> RESULT_LIST_TYPE = new TypeReference<List<StepResult>>(){};
     //@formatter:on
@@ -72,6 +73,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     private final ScenarioRoMapper scenarioRoMapper;
     private final ProjectRoMapper projectRoMapper;
     private final ScenarioRepository scenarioRepository;
+    private final StepRepository stepRepository;
+    private final ProjectRepository projectRepository;
     private final ProjectService projectService;
     private final EnvironmentProperties environmentProperties;
     private final AbstractReportGenerator reportGenerator;
@@ -83,7 +86,7 @@ public class ScenarioServiceImpl implements ScenarioService {
             ScenarioRoMapper scenarioRoMapper,
             ProjectRoMapper projectRoMapper,
             ScenarioRepository scenarioRepository,
-            ProjectService projectService,
+            StepRepository stepRepository, ProjectRepository projectRepository, ProjectService projectService,
             EnvironmentProperties environmentProperties,
             AbstractReportGenerator reportGenerator,
             ScenarioLauncher scenarioLauncher
@@ -92,6 +95,8 @@ public class ScenarioServiceImpl implements ScenarioService {
         this.scenarioRoMapper = scenarioRoMapper;
         this.projectRoMapper = projectRoMapper;
         this.scenarioRepository = scenarioRepository;
+        this.stepRepository = stepRepository;
+        this.projectRepository = projectRepository;
         this.projectService = projectService;
         this.environmentProperties = environmentProperties;
         this.reportGenerator = reportGenerator;
@@ -132,7 +137,7 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public List<StepResult> getResult(ScenarioIdentityRo identity) {
+    public List<StepResult> getResult(Long identity) {
         try {
             return loadResults(identity);
         } catch (IOException e) {
@@ -142,16 +147,14 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public void getReport(List<ScenarioIdentityRo> identities, ZipOutputStream outputStream) throws Exception {
+    public void getReport(List<Long> identities, ZipOutputStream outputStream) throws Exception {
         log.info("Scenario identities to generate report: {}", identities.size());
         reportGenerator.clear();
         identities.forEach(identity -> {
             try {
                 List<StepResult> results = loadResults(identity);
                 if (results != null) {
-                    String scenarioGroup = identity.getGroup();
-                    String scenarioPath = (StringUtils.isEmpty(scenarioGroup) ? "" : scenarioGroup + "/") + identity.getCode();
-                    Scenario scenario = scenarioRepository.findScenario(identity.getProjectCode(), scenarioPath);
+                    Scenario scenario = scenarioRepository.getOne(identity);
                     reportGenerator.add(scenario, results);
                 }
             } catch (IOException e) {
@@ -172,155 +175,120 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public StepRo addStepToScenario(String projectCode, String scenarioPath, StepRo stepRo) throws IOException {
-        synchronized (projectService) {
-            Scenario scenario = findOne(projectCode, scenarioPath);
-            if (scenario != null) {
-                Step newStep = stepRoMapper.convertStepRoToStep(stepRo);
-                scenario.getStepList().add(newStep);
-                scenarioRepository.saveScenario(projectCode, scenarioPath, scenario, false);
-                return stepRoMapper.stepToStepRo(newStep);
-            }
-            return null;
+    public StepRo addStepToScenario(Long scenarioId, StepRo stepRo) throws IOException {
+        Scenario scenario = scenarioRepository.findOne(scenarioId);
+        if (scenario != null) {
+            Step newStep = stepRoMapper.convertStepRoToStep(stepRo);
+            scenario.getStepList().add(newStep);
+            scenarioRepository.save(scenario);
+            return stepRoMapper.stepToStepRo(newStep);
         }
+        return null;
     }
 
     @Override
     public Scenario saveScenario(String projectCode, String scenarioPath, Scenario scenario) throws IOException {
-        return scenarioRepository.saveScenario(projectCode, scenarioPath, scenario, false);
+        return scenarioRepository.save(scenario);
     }
 
     @Override
-    public void deleteOne(String projectCode, String scenarioPath) throws IOException {
-        synchronized (projectService) {
-            scenarioRepository.delete(projectCode, scenarioPath);
-        }
+    public void deleteOne(Long id) throws IOException {
+        scenarioRepository.delete(id);
     }
 
     @Override
-    public ScenarioRo updateScenarioFormRo(String projectCode, String scenarioPath, ScenarioRo scenarioRo) throws IOException {
-        synchronized (projectService) {
-            Scenario scenario = scenarioRepository.findScenario(projectCode, scenarioPath);
-            if (scenario != null) {
-                String oldPath = scenario.getPath();
-                scenario = scenarioRoMapper.updateScenario(scenarioRo, scenario);
-                scenario = scenarioRepository.saveScenario(projectCode, scenarioPath, scenario, true);
-                String newPath = scenario.getPath();
-                projectService.updateBeforeAfterScenariosSettings(projectCode, oldPath, newPath);
-                return projectRoMapper.scenarioToScenarioRo(projectCode, scenario);
-            }
-            return null;
+    public ScenarioRo updateScenarioFormRo(Long id, ScenarioRo scenarioRo) {
+        Scenario scenario = scenarioRepository.findOne(id);
+        if (scenario != null) {
+            scenario = scenarioRoMapper.updateScenario(scenarioRo, scenario);
+            scenario = scenarioRepository.save(scenario);
+            return projectRoMapper.scenarioToScenarioRo(scenario);
         }
+        return null;
     }
 
     @Override
-    public Scenario findOne(String projectCode, String scenarioPath) throws IOException {
-        synchronized (projectService) {
-            return scenarioRepository.findScenario(projectCode, scenarioPath);
-        }
+    public Scenario findOne(Long id) {
+        return scenarioRepository.findOne(id);
     }
 
     @Override
-    public Step cloneStep(String projectCode, String scenarioPath, String stepCode) throws IOException {
-        synchronized (projectService) {
-            Scenario scenario = scenarioRepository.findScenario(projectCode, scenarioPath);
-            Step existsStep = scenario.getStepList().stream()
-                    .filter(step -> Objects.equals(step.getCode(), stepCode))
-                    .findAny()
-                    .orElse(null);
-            if (existsStep != null) {
-                Step newStep = existsStep.copy();
-                scenario.getStepList().add(newStep);
-                return newStep;
-            }
-            return null;
+    public Step cloneStep(Long id, String stepCode) {
+        Scenario scenario = scenarioRepository.findOne(id);
+        Step existsStep = scenario.getStepList().stream()
+                .filter(step -> Objects.equals(step.getCode(), stepCode))
+                .findAny()
+                .orElse(null);
+        if (existsStep != null) {
+            Step newStep = existsStep.copy();
+            scenario.getStepList().add(newStep);
+            return newStep;
         }
+        return null;
     }
 
     @Override
-    public List<StepRo> updateStepListFromRo(String projectCode, String scenarioPath, List<StepRo> stepRoList) throws IOException {
-        synchronized (projectService) {
-            Scenario scenario = findOne(projectCode, scenarioPath);
-            if (scenario != null) {
-                stepRoMapper.updateScenarioStepList(stepRoList, scenario);
-                scenario = scenarioRepository.saveScenario(projectCode, scenarioPath, scenario, false);
-                return stepRoMapper.convertStepListToStepRoList(scenario.getStepList());
-            }
-            throw new ResourceNotFoundException();
+    public List<StepRo> updateStepListFromRo(Long id, List<StepRo> stepRoList) {
+        Scenario scenario = findOne(id);
+        if (scenario != null) {
+            stepRoMapper.updateScenarioStepList(stepRoList, scenario);
+            scenario = scenarioRepository.save(scenario);
+            return stepRoMapper.convertStepListToStepRoList(scenario.getStepList());
         }
+        throw new ResourceNotFoundException();
     }
 
     @Override
     public List<ScenarioRo> findScenarioByStepRelativeUrl(String projectCode, ProjectSearchRo projectSearchRo) {
         List<Scenario> scenarios = new ArrayList<>();
         if (!StringUtils.isEmpty(projectSearchRo.getRelativeUrl())) {
-            scenarios = new ArrayList<>(scenarioRepository.findByRelativeUrl(projectCode, projectSearchRo.getRelativeUrl()));
+            HashSet<Scenario> scenarioSet = new HashSet<>();
+            stepRepository.findByRelativeUrl(projectSearchRo.getRelativeUrl()).forEach(step -> scenarioSet.add(step.getScenario()));
+            scenarios = new ArrayList<>(scenarioSet);
         }
         return projectRoMapper.convertScenarioListToScenarioRoList(scenarios);
     }
 
     @Override
-    public StepRo updateStepFromRo(String projectCode, String scenarioPath, String stepCode, StepRo stepRo) throws IOException {
-        synchronized (projectService) {
-            Scenario scenario = scenarioRepository.findScenario(projectCode, scenarioPath);
-            Step existsStep = scenario.getStepList().stream()
-                    .filter(step -> Objects.equals(step.getCode(), stepCode))
-                    .findAny()
-                    .orElse(null);
-            stepRoMapper.updateStep(stepRo, existsStep);
-            scenarioRepository.saveScenario(projectCode, scenarioPath, scenario, false);
-            return stepRoMapper.stepToStepRo(existsStep);
-        }
+    public StepRo updateStepFromRo(Long scenarioId, String stepCode, StepRo stepRo) {
+        Scenario scenario = scenarioRepository.findOne(scenarioId);
+        Step existsStep = scenario.getStepList().stream()
+                .filter(step -> Objects.equals(step.getCode(), stepCode))
+                .findAny()
+                .orElse(null);
+        stepRoMapper.updateStep(stepRo, existsStep);
+        scenarioRepository.save(scenario);
+        return stepRoMapper.stepToStepRo(existsStep);
     }
 
     @Override
-    public List<Scenario> findAllByProject(String projectCode) {
-        return scenarioRepository.findScenarios(projectCode);
+    public List<Scenario> findAllByProject(Long projectId) {
+        return projectRepository.getOne(projectId).getScenarioList();
     }
 
     @Override
     public ScenarioRo addScenarioToProject(String projectCode, ScenarioRo scenarioRo) throws IOException {
-        synchronized (this) {
-            Scenario newScenario = scenarioRoMapper.updateScenario(scenarioRo, new Scenario());
-            newScenario = scenarioRepository.saveScenario(projectCode, null, newScenario, true);
-            return projectRoMapper.scenarioToScenarioRo(projectCode, newScenario);
-        }
+        Scenario newScenario = scenarioRoMapper.updateScenario(scenarioRo, new Scenario());
+        newScenario = scenarioRepository.save(newScenario);
+        return projectRoMapper.scenarioToScenarioRo(newScenario);
     }
 
     private void loadBeforeAndAfterScenarios(Project project, List<Scenario> scenarioList) {
         for (Scenario scenario : scenarioList) {
-            try {
-                if (!scenario.getBeforeScenarioIgnore() && project.getBeforeScenarioPath() != null) {
-                    project.getScenarioList().add(scenarioRepository.findScenario(
-                            project.getCode(),
-                            project.getBeforeScenarioPath()
-                    ));
-                }
-            } catch (IOException e) {
-                log.error("Error while loading before scenario", e);
+            if (!scenario.getBeforeScenarioIgnore() && project.getBeforeScenario() != null) {
+                project.getScenarioList().add(project.getBeforeScenario());
             }
-            try {
-                if (!scenario.getAfterScenarioIgnore() && project.getAfterScenarioPath() != null) {
-                    project.getScenarioList().add(scenarioRepository.findScenario(
-                            project.getCode(),
-                            project.getAfterScenarioPath()
-                    ));
-                }
-            } catch (IOException e) {
-                log.error("Error while loading after scenario", e);
+            if (!scenario.getAfterScenarioIgnore() && project.getAfterScenario() != null) {
+                project.getScenarioList().add(project.getAfterScenario());
             }
         }
     }
 
-    private List<StepResult> loadResults(ScenarioIdentityRo identity) throws IOException {
-        String scenarioGroup = identity.getGroup();
-        String groupDir = scenarioGroup != null ? scenarioGroup : DEFAULT_GROUP;
+    private List<StepResult> loadResults(Long identity) throws IOException {
         Path resultsFile = Paths.get(
                 "tmp",
                 "results",
-                identity.getProjectCode(),
-                groupDir,
-                identity.getCode(),
+                identity.toString(),
                 "results.json"
         );
         List<StepResult> results = null;

@@ -121,13 +121,13 @@ public class ScenarioLauncherImpl implements ScenarioLauncher {
                 String scenarioGroup = scenario.getScenarioGroup();
                 String scenarioPath = (StringUtils.isEmpty(scenarioGroup) ? "" : scenarioGroup + "/") +
                                       scenario.getCode();
-                String groupDir = scenarioGroup != null ? scenarioGroup : DEFAULT_GROUP;
+                String groupDir = scenarioGroup;
 
-                Scenario scenarioToUpdate = scenarioRepository.findScenario(project.getCode(), scenarioPath);
+                Scenario scenarioToUpdate = scenarioRepository.getOne(scenarioId);
                 List<StepResult> stepResultList = scenarioResult.getStepResultList();
                 scenarioToUpdate.setFailed(scenarioResult.isFailed());
                 scenarioToUpdate.setHasResults(true);
-                scenario = scenarioRepository.saveScenario(project.getCode(), scenarioPath, scenarioToUpdate, false);
+                scenario = scenarioRepository.save(scenarioToUpdate);
 
                 Path path = Paths.get("tmp", "results", project.getCode(), groupDir, scenario.getCode());
                 if (!Files.exists(path)) {

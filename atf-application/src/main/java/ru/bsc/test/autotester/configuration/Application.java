@@ -34,16 +34,11 @@ import java.util.Arrays;
  * Created by sdoroshin on 23.10.2017.
  */
 
-@EnableAutoConfiguration(exclude = {
-        DataSourceAutoConfiguration.class,
-        DataSourceTransactionManagerAutoConfiguration.class,
-        HibernateJpaAutoConfiguration.class
-})
 @SpringBootApplication
 public class Application {
 
     public static void main(String args[]) {
-        ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(new Class[]{Application.class, SpringRootConfig.class}, args);
         if (Arrays.asList(args).contains("execute")) {
             int exitCode = SpringApplication.exit(
                     context,

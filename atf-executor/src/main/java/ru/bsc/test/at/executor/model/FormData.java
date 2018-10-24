@@ -22,12 +22,25 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 @SuppressWarnings("WeakerAccess")
 @Getter
 @Setter
 @ToString
+@Entity
+@Table(name = "form_data")
 public class FormData implements AbstractModel {
 
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "step_id")
+    private Step step;
     private String fieldName;
     private FieldType fieldType;
     private String value;

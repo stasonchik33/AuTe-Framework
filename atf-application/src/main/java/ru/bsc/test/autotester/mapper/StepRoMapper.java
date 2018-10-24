@@ -44,6 +44,8 @@ public abstract class StepRoMapper {
     private JsonDiffCalculator diffCalculator;
 
     @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "scenario", ignore = true),
             @Mapping(target = "expectedServiceRequests", source = "expectedServiceRequestList"),
             @Mapping(target = "requestFile", ignore = true),
             @Mapping(target = "expectedResponseFile", ignore = true),

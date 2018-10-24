@@ -21,13 +21,28 @@ package ru.bsc.test.at.executor.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 /**
  * Created by sdoroshin on 08.09.2017.
  *
  */
 @Getter
 @Setter
+@Entity
+@Table(name = "step_parameter")
 public class StepParameter implements AbstractModel {
+
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "step_parameter_set_id")
+    private StepParameterSet stepParameterSet;
     private String name;
     private String value;
 

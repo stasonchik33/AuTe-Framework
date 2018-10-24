@@ -21,13 +21,27 @@ package ru.bsc.test.at.executor.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * Created by smakarov
  * 21.05.2018 15:34
  */
 @Getter
 @Setter
+@Entity
+@Table(name = "mq_mock_response")
 public class MqMockResponse {
+
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "mq_mock_id")
+    private MqMock mqMock;
     private String responseBody;
     private String destinationQueueName;
     private String responseFile;

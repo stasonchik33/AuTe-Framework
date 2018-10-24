@@ -21,9 +21,23 @@ package ru.bsc.test.at.executor.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 @Getter
 @Setter
+@Entity
+@Table(name = "header_item")
 public class HeaderItem {
+
+    @Id
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "mock_service_response")
+    private MockServiceResponse mockServiceResponse;
     String headerName;
     String headerValue;
     String compareType;

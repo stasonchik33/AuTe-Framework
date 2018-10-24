@@ -35,13 +35,13 @@ import java.util.zip.ZipOutputStream;
  */
 public interface ScenarioService {
 
-    Scenario findOne(String projectCode, String scenarioPath) throws IOException;
+    Scenario findOne(Long id);
 
-    ScenarioRo updateScenarioFormRo(String projectCode, String scenarioPath, ScenarioRo scenarioRo) throws IOException;
+    ScenarioRo updateScenarioFormRo(Long id, ScenarioRo scenarioRo);
 
-    Step cloneStep(String projectCode, String scenarioPath, String stepCode) throws IOException;
+    Step cloneStep(Long id, String stepCode);
 
-    List<StepRo> updateStepListFromRo(String projectCode, String scenarioPath, List<StepRo> stepRoList) throws IOException;
+    List<StepRo> updateStepListFromRo(Long id, List<StepRo> stepRoList);
 
     StartScenarioInfoRo startScenarioExecutingList(Project project, List<Scenario> scenarioList);
 
@@ -51,21 +51,21 @@ public interface ScenarioService {
 
     ExecutionResult getResult(String executingUuid);
 
-    List<StepResult> getResult(ScenarioIdentityRo identity);
+    List<StepResult> getResult(Long id);
 
-    StepRo addStepToScenario(String projectCode, String scenarioPath, StepRo stepRo) throws IOException;
+    StepRo addStepToScenario(Long scenarioId, StepRo stepRo) throws IOException;
 
     Scenario saveScenario(String projectCode, String scenarioPath, Scenario scenario) throws IOException;
 
-    void deleteOne(String projectCode, String scenarioPath) throws IOException;
+    void deleteOne(Long id) throws IOException;
 
     List<ScenarioRo> findScenarioByStepRelativeUrl(String projectCode, ProjectSearchRo projectSearchRo);
 
-    StepRo updateStepFromRo(String projectCode, String scenarioPath, String stepCode, StepRo stepRo) throws IOException;
+    StepRo updateStepFromRo(Long scenarioId, String stepCode, StepRo stepRo);
 
-    List<Scenario> findAllByProject(String projectCode);
+    List<Scenario> findAllByProject(Long projectId);
 
     ScenarioRo addScenarioToProject(String projectCode, ScenarioRo scenarioRo) throws IOException;
 
-    void getReport(List<ScenarioIdentityRo> identities, ZipOutputStream executionUuid) throws Exception;
+    void getReport(List<Long> identities, ZipOutputStream executionUuid) throws Exception;
 }
