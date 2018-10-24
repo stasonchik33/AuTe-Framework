@@ -18,11 +18,11 @@
 
 package ru.bsc.test.at.executor.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,21 +34,19 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "code")
 @Entity
 @Table(name = "expected_service_request")
 public class ExpectedServiceRequest implements Serializable, AbstractModel {
     private static final long serialVersionUID = 2437656620029851514L;
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "step_id")
     private Step step;
-    private String code;
     private String serviceName;
     private String expectedServiceRequest;
-    private String expectedServiceRequestFile;
     private String ignoredTags;
     private String count;
 

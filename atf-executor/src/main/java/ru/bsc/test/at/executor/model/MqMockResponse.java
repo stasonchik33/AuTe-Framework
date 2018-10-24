@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -38,13 +39,13 @@ import javax.persistence.Table;
 public class MqMockResponse {
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "mq_mock_id")
     private MqMock mqMock;
     private String responseBody;
     private String destinationQueueName;
-    private String responseFile;
 
     public MqMockResponse copy() {
         MqMockResponse copy = new MqMockResponse();

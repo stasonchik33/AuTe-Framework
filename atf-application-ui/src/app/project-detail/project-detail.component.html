@@ -20,23 +20,23 @@
   <div class="breadcrumb-search">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a [routerLink]="'/'">{{'Projects' | translate}}</a></li>
-      <li class="breadcrumb-item active">{{project.code}}. {{project.name}}</li>
+      <li class="breadcrumb-item active">{{project.id}}. {{project.name}}</li>
     </ol>
-    <app-search [projectCode]="project.code"></app-search>
+    <app-search></app-search>
   </div>
 
   <h4>{{project.name}}</h4>
-  <a [routerLink]="['/project/' + project.code + '/settings']">{{'Settings' | translate}}</a>
+  <a [routerLink]="['/project/' + project.id + '/settings']">{{'Settings' | translate}}</a>
 
   <nav aria-label="Scenario groups">
     <ul class="pagination">
       <li [class.active]="!filter">
         <a href="#" (click)="selectAllGroups()">{{'All' | translate}}</a>
       </li>
-      <li [class.active]="filter && !filter.scenarioGroup">
+      <li [class.active]="filter">
         <a href="#" (click)="selectGroup()">{{'Without group' | translate}}</a>
       </li>
-      <li [class.active]="filter && group == filter.scenarioGroup" *ngFor="let group of project.groupList">
+      <li [class.active]="filter" *ngFor="let group of project.groupList">
         <a href="#" (click)="selectGroup(group)">{{group}}</a>
       </li>
     </ul>
@@ -69,7 +69,7 @@
     </div>
   </div>
   <div style="min-height: 33px;" [style.display]="isDisplayScenario(scenario) ? '' : 'none'" *ngFor="let scenario of scenarioList">
-    <app-scenario-list-item [scenario]="scenario" [projectCode]="project.code" (onStateChange)="onStateChange($event, scenario)" (cbStateChange)="onCbStateChange($event, scenario)"></app-scenario-list-item>
+    <app-scenario-list-item [scenario]="scenario" [projectId]="project.id" (onStateChange)="onStateChange($event, scenario)" (cbStateChange)="onCbStateChange($event, scenario)"></app-scenario-list-item>
   </div>
 
   <div class="container">

@@ -21,6 +21,7 @@ package ru.bsc.test.at.executor.model;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,6 +35,7 @@ public class SqlData implements Serializable, AbstractModel {
     private static final long serialVersionUID = -5297373310164570345L;
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "step_id")

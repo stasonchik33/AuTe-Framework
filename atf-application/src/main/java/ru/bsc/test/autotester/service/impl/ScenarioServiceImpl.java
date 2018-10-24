@@ -29,17 +29,14 @@ import org.springframework.stereotype.Service;
 import ru.bsc.test.at.executor.model.*;
 import ru.bsc.test.autotester.exception.ResourceNotFoundException;
 import ru.bsc.test.autotester.launcher.api.ScenarioLauncher;
-import ru.bsc.test.autotester.mapper.ProjectRoMapper;
 import ru.bsc.test.autotester.mapper.ScenarioRoMapper;
 import ru.bsc.test.autotester.mapper.StepRoMapper;
 import ru.bsc.test.autotester.model.ExecutionResult;
-import ru.bsc.test.autotester.properties.EnvironmentProperties;
 import ru.bsc.test.autotester.report.AbstractReportGenerator;
 import ru.bsc.test.autotester.repository.ProjectRepository;
 import ru.bsc.test.autotester.repository.ScenarioRepository;
 import ru.bsc.test.autotester.repository.StepRepository;
 import ru.bsc.test.autotester.ro.*;
-import ru.bsc.test.autotester.service.ProjectService;
 import ru.bsc.test.autotester.service.ScenarioService;
 import ru.bsc.test.autotester.utils.ZipUtils;
 
@@ -71,12 +68,9 @@ public class ScenarioServiceImpl implements ScenarioService {
     );
     private final StepRoMapper stepRoMapper;
     private final ScenarioRoMapper scenarioRoMapper;
-    private final ProjectRoMapper projectRoMapper;
     private final ScenarioRepository scenarioRepository;
     private final StepRepository stepRepository;
     private final ProjectRepository projectRepository;
-    private final ProjectService projectService;
-    private final EnvironmentProperties environmentProperties;
     private final AbstractReportGenerator reportGenerator;
     private final ScenarioLauncher scenarioLauncher;
 
@@ -84,21 +78,16 @@ public class ScenarioServiceImpl implements ScenarioService {
     public ScenarioServiceImpl(
             StepRoMapper stepRoMapper,
             ScenarioRoMapper scenarioRoMapper,
-            ProjectRoMapper projectRoMapper,
             ScenarioRepository scenarioRepository,
-            StepRepository stepRepository, ProjectRepository projectRepository, ProjectService projectService,
-            EnvironmentProperties environmentProperties,
+            StepRepository stepRepository, ProjectRepository projectRepository,
             AbstractReportGenerator reportGenerator,
             ScenarioLauncher scenarioLauncher
     ) {
         this.stepRoMapper = stepRoMapper;
         this.scenarioRoMapper = scenarioRoMapper;
-        this.projectRoMapper = projectRoMapper;
         this.scenarioRepository = scenarioRepository;
         this.stepRepository = stepRepository;
         this.projectRepository = projectRepository;
-        this.projectService = projectService;
-        this.environmentProperties = environmentProperties;
         this.reportGenerator = reportGenerator;
         this.scenarioLauncher = scenarioLauncher;
     }
@@ -115,7 +104,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         startScenarioInfoRo.setRunningUuid(runningUuid);
         runningScriptsMap.put(runningUuid, executionResult);
 
-        scenarioLauncher.launchScenarioFromUI(scenarioList, project, environmentProperties, executionResult, stopExecutingSet, projectService, runningUuid );
+        scenarioLauncher.launchScenarioFromUI(scenarioList, project, executionResult, stopExecutingSet, runningUuid);
         return startScenarioInfoRo;
     }
 
@@ -175,24 +164,7 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public StepRo addStepToScenario(Long scenarioId, StepRo stepRo) throws IOException {
-        Scenario scenario = scenarioRepository.findOne(scenarioId);
-        if (scenario != null) {
-            Step newStep = stepRoMapper.convertStepRoToStep(stepRo);
-            scenario.getStepList().add(newStep);
-            scenarioRepository.save(scenario);
-            return stepRoMapper.stepToStepRo(newStep);
-        }
-        return null;
-    }
-
-    @Override
-    public Scenario saveScenario(String projectCode, String scenarioPath, Scenario scenario) throws IOException {
-        return scenarioRepository.save(scenario);
-    }
-
-    @Override
-    public void deleteOne(Long id) throws IOException {
+    public void deleteOne(Long id) {
         scenarioRepository.delete(id);
     }
 
@@ -202,7 +174,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         if (scenario != null) {
             scenario = scenarioRoMapper.updateScenario(scenarioRo, scenario);
             scenario = scenarioRepository.save(scenario);
-            return projectRoMapper.scenarioToScenarioRo(scenario);
+            return scenarioRoMapper.scenarioToScenarioRo(scenario);
         }
         return null;
     }
@@ -213,23 +185,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public Step cloneStep(Long id, String stepCode) {
-        Scenario scenario = scenarioRepository.findOne(id);
-        Step existsStep = scenario.getStepList().stream()
-                .filter(step -> Objects.equals(step.getCode(), stepCode))
-                .findAny()
-                .orElse(null);
-        if (existsStep != null) {
-            Step newStep = existsStep.copy();
-            scenario.getStepList().add(newStep);
-            return newStep;
-        }
-        return null;
-    }
-
-    @Override
-    public List<StepRo> updateStepListFromRo(Long id, List<StepRo> stepRoList) {
-        Scenario scenario = findOne(id);
+    public List<StepRo> updateStepListFromRo(Long scenarioId, List<StepRo> stepRoList) {
+        Scenario scenario = findOne(scenarioId);
         if (scenario != null) {
             stepRoMapper.updateScenarioStepList(stepRoList, scenario);
             scenario = scenarioRepository.save(scenario);
@@ -239,21 +196,21 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public List<ScenarioRo> findScenarioByStepRelativeUrl(String projectCode, ProjectSearchRo projectSearchRo) {
+    public List<ScenarioRo> findScenarioByStepRelativeUrl(ProjectSearchRo projectSearchRo) {
         List<Scenario> scenarios = new ArrayList<>();
         if (!StringUtils.isEmpty(projectSearchRo.getRelativeUrl())) {
             HashSet<Scenario> scenarioSet = new HashSet<>();
             stepRepository.findByRelativeUrl(projectSearchRo.getRelativeUrl()).forEach(step -> scenarioSet.add(step.getScenario()));
             scenarios = new ArrayList<>(scenarioSet);
         }
-        return projectRoMapper.convertScenarioListToScenarioRoList(scenarios);
+        return scenarioRoMapper.convertScenarioListToScenarioRoList(scenarios);
     }
 
     @Override
-    public StepRo updateStepFromRo(Long scenarioId, String stepCode, StepRo stepRo) {
+    public StepRo updateStepFromRo(Long scenarioId, Long stepId, StepRo stepRo) {
         Scenario scenario = scenarioRepository.findOne(scenarioId);
         Step existsStep = scenario.getStepList().stream()
-                .filter(step -> Objects.equals(step.getCode(), stepCode))
+                .filter(step -> Objects.equals(step.getId(), stepId))
                 .findAny()
                 .orElse(null);
         stepRoMapper.updateStep(stepRo, existsStep);
@@ -267,10 +224,10 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public ScenarioRo addScenarioToProject(String projectCode, ScenarioRo scenarioRo) throws IOException {
+    public ScenarioRo addScenarioToProject(ScenarioRo scenarioRo) {
         Scenario newScenario = scenarioRoMapper.updateScenario(scenarioRo, new Scenario());
         newScenario = scenarioRepository.save(newScenario);
-        return projectRoMapper.scenarioToScenarioRo(newScenario);
+        return scenarioRoMapper.scenarioToScenarioRo(newScenario);
     }
 
     private void loadBeforeAndAfterScenarios(Project project, List<Scenario> scenarioList) {

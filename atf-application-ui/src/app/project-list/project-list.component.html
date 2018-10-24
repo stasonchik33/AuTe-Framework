@@ -25,7 +25,7 @@
   <tbody>
     <tr *ngFor="let project of projectList">
       <td>
-        <a [routerLink]="['/project', project.code]">{{project.name}}</a>
+        <a [routerLink]="['/project', project.id]">{{project.name}}</a>
       </td>
       <td>
         <ng-container *ngIf="project.stand">
@@ -47,12 +47,6 @@
           style="width: 50%;"
           title=""
           [(ngModel)]="newProjectName"/>
-        <input
-          placeholder="{{'Project code' | translate}}"
-          class="form-control"
-          style="width: 50%;"
-          title=""
-          [(ngModel)]="newProjectCode"/>
         <div class="input-group-btn">
           <button class="btn btn-success" (click)="saveNewProject()"><span class="glyphicon glyphicon-plus"></span> {{ 'Create' | translate}}</button>
         </div>

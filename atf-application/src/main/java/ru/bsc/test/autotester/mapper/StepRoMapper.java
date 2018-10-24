@@ -18,7 +18,6 @@
 
 package ru.bsc.test.autotester.mapper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -46,10 +45,7 @@ public abstract class StepRoMapper {
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "scenario", ignore = true),
-            @Mapping(target = "expectedServiceRequests", source = "expectedServiceRequestList"),
-            @Mapping(target = "requestFile", ignore = true),
-            @Mapping(target = "expectedResponseFile", ignore = true),
-            @Mapping(target = "mqMessageFile", ignore = true),
+            @Mapping(target = "expectedServiceRequestList", source = "expectedServiceRequestList"),
     })
     public abstract Step updateStep(StepRo stepRo, @MappingTarget Step step);
 
@@ -57,15 +53,20 @@ public abstract class StepRoMapper {
         return updateStep(stepRo, new Step());
     }
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
+    })
+    abstract SqlData to(SqlDataRo ro);
+
+    abstract SqlDataRo to(SqlData ro);
+
     abstract List<ExpectedServiceRequest> requestListRoToRequest(List<ExpectedServiceRequestRo> expectedServiceRequestRoList);
 
     abstract List<MockServiceResponse> responseListRoToResponse(List<MockServiceResponseRo> mockServiceResponseRoList);
 
     abstract List<FormData> formDataRoListToFormData(List<FormDataRo> formDataRoList);
 
-    @Mappings({
-            @Mapping(target = "expectedServiceRequestList", source = "expectedServiceRequests"),
-    })
     public abstract StepRo stepToStepRo(Step step);
 
     public abstract List<StepRo> convertStepListToStepRoList(List<Step> stepList);
@@ -76,6 +77,10 @@ public abstract class StepRoMapper {
 
     abstract List<StepParameterSetRo> convertStepParameterSetListToStepParameterSetRoList(List<StepParameterSet> stepParameterSetList);
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
+    })
     abstract StepParameterSet updateStepParameterSetFromRo(StepParameterSetRo stepParameterSetRo);
 
     abstract List<StepParameter> stepParameterRoListToStepParameter(List<StepParameterRo> stepParameterRoList);
@@ -88,6 +93,10 @@ public abstract class StepRoMapper {
 
     abstract List<StepParameterRo> convertStepParameterToStepParameterRo(List<StepParameter> stepParameterList);
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "stepParameterSet", ignore = true),
+    })
     abstract StepParameter updateStepParameterFromRo(StepParameterRo stepParameterRo);
 
     abstract StepParameterRo stepParameterToStepParameterRo(StepParameter stepParameter);
@@ -117,14 +126,20 @@ public abstract class StepRoMapper {
     abstract HeaderItemRo headerItemToHeaderItemRo(HeaderItem headerItem);
 
     @Mappings({
-            @Mapping(target = "responseBodyFile", ignore = true)
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
     })
     abstract MockServiceResponse updateMockServiceResponseFromRo(MockServiceResponseRo mockServiceResponseRo);
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "mockServiceResponse", ignore = true),
+    })
     abstract HeaderItem updateHeaderFromRo(HeaderItemRo headerItemRo);
 
     @Mappings({
-            @Mapping(target = "expectedServiceRequestFile", ignore = true)
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
     })
     abstract ExpectedServiceRequest updateExpectedServiceRequestFromRo(ExpectedServiceRequestRo expectedServiceRequestRo);
 
@@ -132,6 +147,10 @@ public abstract class StepRoMapper {
         return updateExpectedServiceRequestFromRo(expectedServiceRequestRo);
     }
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
+    })
     abstract FormData updateFormDataFromRo(FormDataRo formDataRo);
 
     abstract List<FormDataRo> convertFormDataListToRo(List<FormData> formDataList);
@@ -146,17 +165,43 @@ public abstract class StepRoMapper {
 
     abstract List<ScenarioVariableFromMqRequestRo> convertMqVar(List<ScenarioVariableFromMqRequest> scenarioVariableFromMqRequestList);
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
+    })
     abstract ScenarioVariableFromMqRequest updateVariableFromMqRequestFromRo(ScenarioVariableFromMqRequestRo variableRo);
 
     abstract List<ScenarioVariableFromMqRequest> convertMqVarListToRo(List<ScenarioVariableFromMqRequestRo> scenarioVariableFromMqRequestRoList);
 
     @Mappings({
-            @Mapping(target = "messageFile", ignore = true)
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
     })
+    abstract MqMessage convertMqMessageRoTo(MqMessageRo ro);
+
     abstract MqMessageRo convertMqMessageToRo(MqMessage ro);
 
     @Mappings({
-            @Mapping(target = "responseFile", ignore = true)
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "mqMock", ignore = true),
     })
+    abstract MqMockResponse convertMqMockResponsePartRoTo(MqMockResponseRo ro);
+
     abstract MqMockResponseRo convertMqMockResponsePartToRo(MqMockResponse response);
+
+    abstract MqMockRo convertMqMockToRo(MqMock mqMock);
+
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
+    })
+    abstract MqMock convertMqMockRoTo(MqMockRo mqMock);
+
+    abstract ExpectedMqRequestRo convertMqMockToRo(ExpectedMqRequest mqMock);
+
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "step", ignore = true),
+    })
+    abstract ExpectedMqRequest convertMqMockRoTo(ExpectedMqRequestRo mqMock);
 }

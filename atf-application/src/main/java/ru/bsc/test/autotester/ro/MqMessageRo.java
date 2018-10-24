@@ -36,6 +36,5 @@ public class MqMessageRo implements AbstractRo {
 
     private String queueName;
     private String message;
-    private String messageFile;
     private List<NameValueProperty> properties = new LinkedList<>();
 }

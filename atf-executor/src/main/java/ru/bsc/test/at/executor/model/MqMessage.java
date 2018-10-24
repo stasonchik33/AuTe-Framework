@@ -24,6 +24,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -45,13 +46,13 @@ public class MqMessage implements Serializable, AbstractModel {
     private static final long serialVersionUID = -2284237307005166339L;
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "step_id")
     private Step step;
     private String queueName;
     private String message;
-    private String messageFile;
     @OneToMany(mappedBy = "mqMessage")
     private List<NameValueProperty> properties = new LinkedList<>();
 

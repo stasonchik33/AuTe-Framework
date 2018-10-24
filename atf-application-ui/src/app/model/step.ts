@@ -24,10 +24,10 @@ import {MqMock} from './mq-mock';
 import {ExpectedMqRequest} from './expected-mq-request';
 import {SqlData} from './sql-data';
 import {ScenarioVariableFromMqRequest} from './scenario-variable-from-mq-request';
-import {MqMessage} from "./mq-message";
+import {MqMessage} from './mq-message';
 
 export class Step {
-  code: string;
+  id: number;
   expectedServiceRequestList: ExpectedServiceRequest[];
   relativeUrl: string;
   requestMethod: string;

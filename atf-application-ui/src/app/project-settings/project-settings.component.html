@@ -18,7 +18,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item"><a [routerLink]="'/'">{{'Projects' | translate}}</a></li>
-  <li *ngIf="project" class="breadcrumb-item"><a [routerLink]="['/project', project.code]">{{project.code}}. {{project.name}}</a></li>
+  <li *ngIf="project" class="breadcrumb-item"><a [routerLink]="['/project', project.id]">{{project.id}}. {{project.name}}</a></li>
   <li class="breadcrumb-item active">{{'Settings' | translate}}</li>
 </ol>
 
@@ -40,17 +40,17 @@
         <label>{{'Before scenario' | translate}}</label>
         <select class="form-control" title="{{'Before scenario' | translate}}" [(ngModel)]="project.beforeScenarioPath">
           <option [ngValue]="null">{{'disabled' | translate}}</option>
-          <option *ngFor="let scenario of scenarioList" [ngValue]="(scenario.scenarioGroup ? scenario.scenarioGroup + '/' : '') + scenario.code">{{scenario.name}}</option>
+          <option *ngFor="let scenario of scenarioList" [ngValue]="scenario.id">{{scenario.name}}</option>
         </select>
 
         <label>{{'After scenario' | translate}}</label>
         <select class="form-control" title="{{'After scenario' | translate}}" [(ngModel)]="project.afterScenarioPath">
           <option [ngValue]="null">{{'disabled' | translate}}</option>
-          <option *ngFor="let scenario of scenarioList" [ngValue]="(scenario.scenarioGroup ? scenario.scenarioGroup + '/' : '') + scenario.code">{{scenario.name}}</option>
+          <option *ngFor="let scenario of scenarioList" [ngValue]="scenario.id">{{scenario.name}}</option>
         </select>
 
         <label>{{'Project code' | translate}}</label>
-        <input disabled class="form-control" title="" [ngModel]="project.code"/>
+        <input disabled class="form-control" title="" [ngModel]="project.name"/>
 
         <hr/>
         <label style="margin-top: 8px;">
@@ -65,14 +65,13 @@
       <div [style.display]="tab == 'groupList' ? '' : 'none'">
         <div *ngFor="let group of project.groupList; let i = index;">
           <div class="col-sm-4" style="margin-bottom: 7px;">
-            <a style="cursor: pointer; " (click)="renameGroup(project.groupList[i]); false;"><small><span class="glyphicon glyphicon-edit"></span></small> <b>{{project.groupList[i]}}</b></a>
             <span class="input-group-btn">
-              <button class="btn btn-sm btn-default" (click)="removeScenarioGroup(group)"><span class="glyphicon glyphicon-minus"></span>{{'Remove' | translate}}</button>
+              <button class="btn btn-sm btn-default" (click)="false;"><span class="glyphicon glyphicon-minus"></span>{{'Remove' | translate}}</button>
             </span>
           </div>
         </div>
         <div class="clearfix"></div>
-        <button class="btn btn-success" style="margin-top: 7px;" (click)="addGroup()"><span class="glyphicon glyphicon-plus"></span> {{'Add group' | translate}}</button>
+        <button class="btn btn-success" style="margin-top: 7px;" (click)="false;"><span class="glyphicon glyphicon-plus"></span> {{'Add group' | translate}}</button>
       </div>
       <div [style.display]="tab == 'stand' ? '' : 'none'">
         <div style="border: none;" class="list-group-item" *ngIf="project.stand">

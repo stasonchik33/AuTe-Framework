@@ -45,7 +45,6 @@ import io.qameta.allure.summary.SummaryPlugin;
 import io.qameta.allure.tags.TagsPlugin;
 import io.qameta.allure.timeline.TimelinePlugin;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -88,20 +87,15 @@ public class AllureReportGenerator extends AbstractReportGenerator {
     private final AttachBuilder<StepResult> stepResultAttachBuilder;
     private final AttachBuilder<RequestData> requestDataAttachBuilder;
     private final ReportGenerator generator;
-    private final Configuration configuration;
-    private final HistoryFilesProcessor historyFilesProcessor;
 
     @Autowired
     public AllureReportGenerator(
             AttachBuilder<StepResult> stepResultAttachBuilder,
-            AttachBuilder<RequestData> requestDataAttachBuilder,
-            HistoryFilesProcessor historyFilesProcessor
+            AttachBuilder<RequestData> requestDataAttachBuilder
     ) {
         this.stepResultAttachBuilder = stepResultAttachBuilder;
         this.requestDataAttachBuilder = requestDataAttachBuilder;
-        this.historyFilesProcessor = historyFilesProcessor;
-        this.configuration = createConfiguration();
-        this.generator = new ReportGenerator(configuration);
+        this.generator = new ReportGenerator(createConfiguration());
     }
 
     @Override
@@ -121,13 +115,9 @@ public class AllureReportGenerator extends AbstractReportGenerator {
             }
         }
 
-        ProjectContext projectContext = configuration.requireContext(ProjectContext.class);
-        String projectCode = detectProjectCode();
-        projectContext.setProjectCode(projectCode);
         Path output = new File(directory + File.separator + "output").toPath();
         final Path resultsDirectory = resultDirectory.toPath();
         generator.generate(output, resultsDirectory);
-        historyFilesProcessor.process(projectCode, output);
         FileUtils.deleteDirectory(resultDirectory);
         log.info("Allure report successfully generated: {}", directory);
     }
@@ -176,7 +166,7 @@ public class AllureReportGenerator extends AbstractReportGenerator {
         if (Files.exists(pluginsPath) && Files.isDirectory(pluginsPath)) {
             final DefaultPluginLoader pluginLoader = new DefaultPluginLoader();
             final ClassLoader classLoader = getClass().getClassLoader();
-            try (Stream<Path> filesStream = Files.list(pluginsPath);) {
+            try (Stream<Path> filesStream = Files.list(pluginsPath)) {
                 List<Plugin> plugins = filesStream
                         .filter(Files::isDirectory)
                         .map(pluginDirectory -> pluginLoader.loadPlugin(classLoader, pluginDirectory))
@@ -191,14 +181,6 @@ public class AllureReportGenerator extends AbstractReportGenerator {
         }
         log.warn("Allure plugins directory not exists, plugins not loaded");
         return Collections.emptyList();
-    }
-
-    private String detectProjectCode() {
-        List<StepResult> results = getScenarioStepResultMap().values().stream().findFirst().orElse(null);
-        if (CollectionUtils.isEmpty(results)) {
-            return null;
-        }
-        return results.get(0).getProjectCode();
     }
 
     private List<AllurePreparedData> buildReportData(
@@ -300,6 +282,6 @@ public class AllureReportGenerator extends AbstractReportGenerator {
     }
 
     private String stepName(ru.bsc.test.at.executor.model.Step step) {
-        return isNotEmpty(step.getStepComment()) ? step.getStepComment() : step.getCode();
+        return isNotEmpty(step.getStepComment()) ? step.getStepComment() : step.getId().toString();
     }
 }

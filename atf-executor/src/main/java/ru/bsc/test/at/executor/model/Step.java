@@ -25,6 +25,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -47,21 +48,19 @@ public class Step implements Serializable, AbstractModel {
     private static final long serialVersionUID = 1670286319126044952L;
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "scenario_id")
     private Scenario scenario;
 
-    private String code;
     @OneToMany(mappedBy = "step")
-    private List<ExpectedServiceRequest> expectedServiceRequests = new LinkedList<>();
+    private List<ExpectedServiceRequest> expectedServiceRequestList = new LinkedList<>();
     private String relativeUrl;
     private HTTPMethod requestMethod;
     private String request;
-    private String requestFile;
     private String requestHeaders;
     private String expectedResponse;
-    private String expectedResponseFile;
     private Boolean expectedResponseIgnore;
     private Integer expectedStatusCode;
     private String jsonXPath;
@@ -102,17 +101,6 @@ public class Step implements Serializable, AbstractModel {
     private List<ScenarioVariableFromMqRequest> scenarioVariableFromMqRequestList;
     private StepMode stepMode;
 
-    @Deprecated
-    private String sql;
-    @Deprecated
-    private String sqlSavedParameter;
-    @Deprecated
-    private String mqName;
-    @Deprecated
-    private String mqMessage;
-    @Deprecated
-    private String mqMessageFile;
-
     // JMS step mode
     private String mqOutputQueueName;
     private String mqInputQueueName;
@@ -136,10 +124,10 @@ public class Step implements Serializable, AbstractModel {
         step.setScript(getScript());
         step.setSavedValuesCheck(new HashMap<>(getSavedValuesCheck()));
         step.setResponseCompareMode(getResponseCompareMode());
-        if (getExpectedServiceRequests() != null) {
-            step.setExpectedServiceRequests(new LinkedList<>());
-            for (ExpectedServiceRequest expectedServiceRequest : getExpectedServiceRequests()) {
-                step.getExpectedServiceRequests().add(expectedServiceRequest.copy());
+        if (getExpectedServiceRequestList() != null) {
+            step.setExpectedServiceRequestList(new LinkedList<>());
+            for (ExpectedServiceRequest expectedServiceRequest : getExpectedServiceRequestList()) {
+                step.getExpectedServiceRequestList().add(expectedServiceRequest.copy());
             }
         }
         if (getMockServiceResponseList() != null) {
@@ -171,9 +159,6 @@ public class Step implements Serializable, AbstractModel {
             }
         }
 
-        step.setMqName(getMqName());
-        step.setMqMessage(getMqMessage());
-        step.setMqMessageFile(getMqMessageFile());
         step.setMultipartFormData(getMultipartFormData());
         step.setJsonCompareMode(getJsonCompareMode());
         step.setNumberRepetitions(getNumberRepetitions());
@@ -206,9 +191,6 @@ public class Step implements Serializable, AbstractModel {
                 step.getSqlDataList().add(sqlData.copy());
             }
         }
-
-        step.setSql(getSql());
-        step.setSqlSavedParameter(getSqlSavedParameter());
 
         if (getScenarioVariableFromMqRequestList() != null) {
             step.setScenarioVariableFromMqRequestList(new LinkedList<>());

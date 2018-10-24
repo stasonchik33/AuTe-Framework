@@ -43,17 +43,15 @@ export class ProjectSettingsComponent implements OnInit {
   constructor(
     private projectService: ProjectService,
     private route: ActivatedRoute,
-    private customToastyService: CustomToastyService,
-    private translate: TranslateService
+    private customToastyService: CustomToastyService
   ) { }
 
   ngOnInit() {
     this.route.paramMap
-      .switchMap((params: ParamMap) => this.projectService.findOne(params.get('projectCode')))
+      .switchMap((params: ParamMap) => this.projectService.findOne(parseInt(params.get('projectId'), 10)))
       .subscribe(value => {
         this.project = value;
-
-        this.projectService.findScenariosByProject(this.project.code)
+        this.projectService.findScenariosByProject(this.project.id)
           .subscribe(scenarioList => this.scenarioList = scenarioList);
       });
   }
@@ -74,46 +72,5 @@ export class ProjectSettingsComponent implements OnInit {
   selectTab(tabName: string): boolean {
     this.tab = tabName;
     return false;
-  }
-
-  removeScenarioGroup(group: string): void {
-    this.translate.get('Remove scenario group').subscribe(msg =>{
-      if (confirm(msg)) {
-        const indexToRemove = this.project.groupList.indexOf(group);
-        if (indexToRemove > -1) {
-          this.project.groupList.splice(indexToRemove, 1);
-        }
-      }
-    });
-  }
-
-  addGroup(): void {
-    let newGroupName: string;
-    if ((newGroupName = prompt('New group name')) && newGroupName && newGroupName.length > 0) {
-      const toasty = this.customToastyService.saving('Сохранение группы...', 'Сохранение может занять некоторое время...');
-      this.projectService.addNewGroup(this.project.code, newGroupName)
-        .subscribe(
-          groupList => {
-            this.project.groupList = groupList;
-            this.customToastyService.success('Сохранено', 'Новая группа создана');
-          },
-          error => this.customToastyService.error('Ошибка', 'Возможно, директорая с таким названием уже существует <hr/>' + error),
-          () => this.customToastyService.clear(toasty));
-    }
-  }
-
-  renameGroup(oldGroupName: string) {
-    let newGroupName: string;
-    if ((newGroupName = prompt('Rename group', oldGroupName.toString())) && newGroupName && newGroupName.length > 0) {
-      const toasty = this.customToastyService.saving('Сохранение группы...', 'Сохранение может занять некоторое время...');
-      this.projectService.renameGroup(this.project.code, oldGroupName, newGroupName)
-        .subscribe(
-          groupList => {
-            this.project.groupList = groupList;
-            this.customToastyService.success('Сохранено', 'Группа переименована');
-          },
-          error => this.customToastyService.error('Ошибка', 'Возможно, директорая с таким названием уже существует <hr/>' + error),
-          () => this.customToastyService.clear(toasty));
-    }
   }
 }

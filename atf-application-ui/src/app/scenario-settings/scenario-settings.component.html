@@ -19,14 +19,11 @@
 <div class="breadcrumb-search">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a [routerLink]="'/'">{{'Projects' | translate}}</a></li>
-    <li *ngIf="project" class="breadcrumb-item"><a [routerLink]="['/project', project.code]">{{project.code}}. {{project.name}}</a></li>
-    <li class="breadcrumb-item" *ngIf="scenario && scenario.scenarioGroup && project">
-      <a [routerLink]="['/project', scenario.projectCode]" [queryParams]="{scenarioGroup: scenario.scenarioGroup}">{{scenario.scenarioGroup}}</a>
-    </li>
-    <li *ngIf="scenario" class="breadcrumb-item"><a [routerLink]="['/project/' + projectCode + '/scenario', (scenario.scenarioGroup ? scenario.scenarioGroup + '/' : '') + scenario.code]">{{scenario.code}}. {{scenario.name}}</a></li>
+    <li *ngIf="project" class="breadcrumb-item"><a [routerLink]="['/project', project.id]">{{project.id}}. {{project.name}}</a></li>
+    <li *ngIf="scenario" class="breadcrumb-item"><a [routerLink]="['/scenario', scenario.id]">{{scenario.id}}. {{scenario.name}}</a></li>
     <li class="breadcrumb-item active">{{'Settings' | translate}}</li>
   </ol>
-  <app-search [projectCode]="projectCode"></app-search>
+  <app-search></app-search>
 </div>
 
 <div *ngIf="scenario">
@@ -47,7 +44,7 @@
         <label>{{'Scenario group' | translate}}</label>
       </div>
       <div class="col-sm-9">
-        <select class="form-control" title="{{'Scenario group' | translate}}" *ngIf="project" [(ngModel)]="scenario.scenarioGroup">
+        <select class="form-control" title="{{'Scenario group' | translate}}" *ngIf="project">
           <option [ngValue]="null">{{'[no group]' | translate}}</option>
           <option  *ngFor="let scenarioGroup of project.groupList" [ngValue]="scenarioGroup">{{scenarioGroup}}</option>
         </select>

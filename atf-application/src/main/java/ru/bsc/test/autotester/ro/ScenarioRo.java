@@ -32,7 +32,7 @@ public class ScenarioRo implements AbstractRo {
     private static final long serialVersionUID = -6026744701723398082L;
 
     private Long id;
-    private String code;
+    private Long projectId;
     private String name;
 
     private String scenarioGroup;

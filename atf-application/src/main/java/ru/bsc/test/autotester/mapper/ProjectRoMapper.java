@@ -23,11 +23,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import ru.bsc.test.at.executor.model.AmqpBroker;
 import ru.bsc.test.at.executor.model.Project;
-import ru.bsc.test.at.executor.model.Scenario;
 import ru.bsc.test.at.executor.model.Stand;
 import ru.bsc.test.autotester.ro.AmqpBrokerRo;
 import ru.bsc.test.autotester.ro.ProjectRo;
-import ru.bsc.test.autotester.ro.ScenarioRo;
 import ru.bsc.test.autotester.ro.StandRo;
 
 import java.util.List;
@@ -41,29 +39,26 @@ import java.util.List;
 public abstract class ProjectRoMapper {
 
     @Mappings({
+            @Mapping(target = "id", source = "id"),
             @Mapping(target = "name", source = "name"),
-            @Mapping(target = "beforeScenarioPath", source = "beforeScenarioPath"),
-            @Mapping(target = "afterScenarioPath", source = "afterScenarioPath"),
-            @Mapping(target = "code", source = "code"),
+            @Mapping(target = "beforeScenario", source = "beforeScenario.id"),
+            @Mapping(target = "afterScenario", source = "afterScenario.id"),
             @Mapping(target = "stand", source = "stand"),
             @Mapping(target = "useRandomTestId", source = "useRandomTestId"),
             @Mapping(target = "testIdHeaderName", source = "testIdHeaderName"),
-            @Mapping(target = "groupList", source = "groupList")
     })
     abstract public ProjectRo projectToProjectRo(Project project);
 
     @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "code", source = "code"),
+            @Mapping(target = "id", ignore = true),
             @Mapping(target = "name", source = "name"),
-            @Mapping(target = "beforeScenarioPath", source = "beforeScenarioPath"),
-            @Mapping(target = "afterScenarioPath", source = "afterScenarioPath"),
+            @Mapping(target = "beforeScenario", ignore = true),
+            @Mapping(target = "afterScenario", ignore = true),
             @Mapping(target = "stand", source = "stand"),
             @Mapping(target = "amqpBroker", source = "amqpBroker"),
             @Mapping(target = "useRandomTestId", source = "useRandomTestId"),
             @Mapping(target = "testIdHeaderName", source = "testIdHeaderName"),
             @Mapping(target = "scenarioList", ignore = true),
-            @Mapping(target = "groupList", source = "groupList"),
             @Mapping(target = "mqCheckInterval", ignore = true),
             @Mapping(target = "mqCheckCount", ignore = true),
     })
@@ -72,6 +67,7 @@ public abstract class ProjectRoMapper {
     abstract public List<ProjectRo> convertProjectListToProjectRoList(List<Project> list);
 
     @Mappings({
+            @Mapping(target = "id", source = "id"),
             @Mapping(target = "serviceUrl", source = "serviceUrl"),
             @Mapping(target = "dbUrl", source = "dbUrl"),
             @Mapping(target = "dbUser", source = "dbUser"),
@@ -81,6 +77,7 @@ public abstract class ProjectRoMapper {
     abstract StandRo standToStandRo(Stand stand);
 
     @Mappings({
+            @Mapping(target = "id", ignore = true),
             @Mapping(target = "serviceUrl", source = "serviceUrl"),
             @Mapping(target = "dbUrl", source = "dbUrl"),
             @Mapping(target = "dbUser", source = "dbUser"),
@@ -88,22 +85,6 @@ public abstract class ProjectRoMapper {
             @Mapping(target = "wireMockUrl", source = "wireMockUrl")
     })
     abstract Stand updateStandFromRo(StandRo standRo);
-
-    @Mappings({
-            @Mapping(target = "projectCode", ignore = true),
-            @Mapping(target = "name", source = "name"),
-            @Mapping(target = "scenarioGroup", source = "scenarioGroup"),
-            @Mapping(target = "stepList", ignore = true),
-            @Mapping(target = "beforeScenarioIgnore", source = "beforeScenarioIgnore"),
-            @Mapping(target = "afterScenarioIgnore", source = "afterScenarioIgnore")
-    })
-    abstract ScenarioRo scenarioToScenarioRoInner(Scenario scenario);
-
-    public ScenarioRo scenarioToScenarioRo(Scenario scenario) {
-        return scenarioToScenarioRoInner(scenario);
-    }
-
-    public abstract List<ScenarioRo> convertScenarioListToScenarioRoList(List<Scenario> scenarioList);
 
     @Mappings({
             @Mapping(target = "mqService", source = "mqService"),

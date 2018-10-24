@@ -54,7 +54,7 @@ export class StepResultItemComponent implements OnInit {
   showRestartNotify = false;
 
   tab = 'details';
-  projectCode: string;
+  projectId: number;
   displayDetails = false;
   changed: Boolean = false;
 
@@ -81,15 +81,14 @@ export class StepResultItemComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.params.subscribe((params: ParamMap) => {
-      this.projectCode = params['projectCode'];
+    this.route.params.subscribe(() => {
       this.formatText();
     });
 
     this.step = this.stepResult.step;
     if (this.stepList) {
       this.showRestartNotify = true;
-      const foundStep = this.stepList.find(s => s.code === this.step.code);
+      const foundStep = this.stepList.find(s => s.id === this.step.id);
       const diffs = StepService.differ(foundStep, this.step);
       console.log('diffs = ', diffs);
       if (diffs.length === 0) {
@@ -297,7 +296,7 @@ export class StepResultItemComponent implements OnInit {
 
   saveStep() {
     const toasty = this.customToastyService.saving();
-    this.stepService.saveStep(this.projectCode, this.scenario.scenarioGroup, this.scenario.code, this.step)
+    this.stepService.saveStep(this.scenario.id, this.step)
       .subscribe(() => {
         this.refreshStepList();
         this.stepItem.resetChangeState();
@@ -310,9 +309,9 @@ export class StepResultItemComponent implements OnInit {
 
   refreshStepList() {
     if (this.stepList) {
-      const index = this.stepList.findIndex(s => s.code === this.step.code);
+      const index = this.stepList.findIndex(s => s.id === this.step.id);
       if (index >= 0) {
-        this.stepList[index] = this.stepService.copyStep(this.step);
+        this.stepList[index] = Object.assign({}, this.step);
       }
     }
   }

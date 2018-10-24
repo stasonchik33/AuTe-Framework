@@ -31,16 +31,4 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-
-    List<Project> findAllProjects();
-
-    List<Project> findAllProjectsWithScenarios();
-
-    Project findProject(String projectCode);
-
-    void saveProject(Project project);
-
-    void addNewGroup(String projectCode, String groupName) throws Exception;
-
-    void renameGroup(String projectCode, String oldGroupName, String newGroupName) throws Exception;
 }

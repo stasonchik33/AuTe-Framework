@@ -29,7 +29,6 @@ import {TranslateService} from '@ngx-translate/core';
 export class ProjectListComponent implements OnInit {
 
   newProjectName: string;
-  newProjectCode: string;
   projectList: Project[];
 
   constructor(
@@ -46,7 +45,6 @@ export class ProjectListComponent implements OnInit {
     if (confirm('Confirm: create new project')) {
       const newProject = new Project();
       newProject.name = this.newProjectName;
-      newProject.code = this.newProjectCode;
 
       const toasty = this.customToastyService.saving('Сохранение проекта...', 'Сохранение может занять некоторое время...');
       const t = this;

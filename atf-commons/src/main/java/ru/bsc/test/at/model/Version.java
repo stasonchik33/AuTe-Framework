@@ -57,7 +57,7 @@ public class Version {
         }
     }
 
-    public static Version unknown() {
+    private static Version unknown() {
         return new Version();
     }
 

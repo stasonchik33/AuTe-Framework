@@ -34,7 +34,6 @@ import ru.bsc.test.at.executor.step.executor.IStepExecutor;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static ru.bsc.test.at.executor.service.AtProjectExecutor.parseLongOrVariable;
@@ -70,7 +69,7 @@ public class AtStepExecutor implements Executor<StepExecutorRequest> {
                     parametersEnvironment.add(new StepParameterSet());
                 }
                 for (StepParameterSet stepParameterSet : parametersEnvironment) {
-                    StepResult stepResult = new StepResult(stepExecutorRequest.getProject().getCode(), step);
+                    StepResult stepResult = new StepResult(step);
                     stepResult.setStart(new Date().getTime());
                     stepResult.setEditable(stepExecutorRequest.isStepEditable());
                     stepExecutorRequest.getStepResultList().add(stepResult);

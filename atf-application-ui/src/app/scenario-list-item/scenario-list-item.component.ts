@@ -23,7 +23,6 @@ import {StepResult} from '../model/step-result';
 import {StartScenarioInfo} from '../model/start-scenario-info';
 import {Step} from '../model/step';
 import { saveAs } from 'file-saver/FileSaver';
-import {ScenarioIdentity} from '../model/scenario-identity';
 import {StepResultItemComponent} from '../step-result-item/step-result-item.component';
 
 @Component({
@@ -36,7 +35,7 @@ export class ScenarioListItemComponent implements OnInit {
   @Input()
   scenario: Scenario;
   @Input()
-  projectCode: string;
+  projectId: string;
   @Input()
   stepList: Step[];
 
@@ -70,10 +69,9 @@ export class ScenarioListItemComponent implements OnInit {
     if (this.state !== 'executing') {
       this.executedSteps = 0;
       this.stepResultList = [];
-      // this.totalSteps = 0;
       this.state = 'starting';
       this.stateChanged();
-      this.scenarioService.run(this.projectCode, this.scenario)
+      this.scenarioService.run(this.scenario)
         .subscribe(startScenarioInfo => {
           this.startScenarioInfo = startScenarioInfo;
           this.state = 'executing';
@@ -131,8 +129,7 @@ export class ScenarioListItemComponent implements OnInit {
 
   resultDetailsToggle() {
     if (!this.stepResultList) {
-      const identity = new ScenarioIdentity(this.projectCode, this.scenario.scenarioGroup, this.scenario.code);
-      this.scenarioService.getResults(identity).subscribe(data => {
+      this.scenarioService.getResults(this.scenario.id).subscribe(data => {
         this.stepResultList = data;
         this.totalSteps = this.stepResultList.length;
         this.executedSteps = this.totalSteps;
@@ -161,8 +158,7 @@ export class ScenarioListItemComponent implements OnInit {
 
   getReport() {
     const scenarioIdentities = [];
-    const identity = new ScenarioIdentity(this.projectCode, this.scenario.scenarioGroup, this.scenario.code);
-    scenarioIdentities.push(identity);
+    scenarioIdentities.push(this.scenario.id);
     this.scenarioService
       .downloadReport(scenarioIdentities)
       .subscribe(blobReport => {
@@ -179,7 +175,7 @@ export class ScenarioListItemComponent implements OnInit {
     this.childrenComponents.forEach(comp => {
       if (comp.stepItem) {
         const s = comp.step;
-        if (s.code === step.code && this.stepList.indexOf(s) === -1) {
+        if (s.id === step.id && this.stepList.indexOf(s) === -1) {
           // setTimeout need remove exception in dev mode https://blog.angular-university.io/angular-debugging/
           setTimeout(() => {
             comp.changed = true;

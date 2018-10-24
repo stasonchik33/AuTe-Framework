@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -31,14 +32,14 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = "expected_mq_request")
-public class ExpectedMqRequest implements CodeAccessible{
+public class ExpectedMqRequest {
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "step_id")
     private Step step;
-    private String code;
     private String sourceQueue;
     private String requestBody;
     private String ignoredTags;
@@ -46,7 +47,6 @@ public class ExpectedMqRequest implements CodeAccessible{
 
     public ExpectedMqRequest copy() {
         ExpectedMqRequest expectedMqRequest = new ExpectedMqRequest();
-        expectedMqRequest.setCode(getCode());
         expectedMqRequest.setSourceQueue(getSourceQueue());
         expectedMqRequest.setRequestBody(getRequestBody());
         expectedMqRequest.setIgnoredTags(getIgnoredTags());

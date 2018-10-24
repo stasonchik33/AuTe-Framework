@@ -31,17 +31,15 @@ import ru.bsc.test.autotester.ro.ScenarioResultRo;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 @Mapper(config = Config.class)
 public abstract class ExecutionResultRoMapper {
 
     @Autowired
     private JsonDiffCalculator diffCalculator;
     @Autowired
-    private ProjectRoMapper projectRoMapper;
-    @Autowired
     private StepRoMapper stepRoMapper;
+    @Autowired
+    private ScenarioRoMapper scenarioRoMapper;
 
     @Mappings({
             @Mapping(target = "finished", source = "finished"),
@@ -60,7 +58,7 @@ public abstract class ExecutionResultRoMapper {
             List<ScenarioResultRo> scenarioResultList = executionResult.getScenarioResults()
                     .stream()
                     .map(scenarioListEntry -> ScenarioResultRo.builder()
-                            .scenario(projectRoMapper.scenarioToScenarioRo("", scenarioListEntry.getScenario()))
+                            .scenario(scenarioRoMapper.scenarioToScenarioRo(scenarioListEntry.getScenario()))
                             .stepResultList(stepRoMapper.convertStepResultListToStepResultRo(scenarioListEntry.getStepResultList()))
                             .totalSteps(scenarioListEntry
                                     .getScenario()

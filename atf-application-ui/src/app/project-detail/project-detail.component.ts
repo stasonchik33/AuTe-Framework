@@ -1,18 +1,18 @@
 /*
- * Copyright 2018 BSC Msc, LLC 
+ * Copyright 2018 BSC Msc, LLC
  *
- * This file is part of the AuTe Framework project 
+ * This file is part of the AuTe Framework project
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
@@ -27,7 +27,6 @@ import { saveAs } from 'file-saver/FileSaver';
 import {CustomToastyService} from '../service/custom-toasty.service';
 import {ScenarioService} from '../service/scenario.service';
 import {TranslateService} from '@ngx-translate/core';
-import {ScenarioIdentity} from '../model/scenario-identity';
 
 @Component({
   selector: 'app-project-detail',
@@ -43,7 +42,6 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
   failCount = 0;
   Math: any;
   newScenarioName = '';
-  scenarioGroupList: string[] = [];
 
   @ViewChildren(ScenarioListItemComponent) scenarioComponentList: QueryList<ScenarioListItemComponent>;
   executingStateExecuted = 0;
@@ -62,31 +60,15 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
 
   ngOnInit() {
     this.route.paramMap
-      .switchMap((params: ParamMap) => this.projectService.findOne(params.get('projectCode')))
+      .switchMap((params: ParamMap) => this.projectService.findOne(parseInt(params.get('projectId'), 10)))
       .subscribe(value => {
         this.project = value;
-
-        this.route
-          .queryParams
-          .subscribe(params => {
-            if (params['scenarioGroup']) {
-              this.filter = new Scenario();
-              this.filter.scenarioGroup = params['scenarioGroup'];
-            }
-          });
       });
 
     this.route.paramMap
-      .switchMap((params: ParamMap) => this.projectService.findScenariosByProject(params.get('projectCode')))
+      .switchMap((params: ParamMap) => this.projectService.findScenariosByProject(parseInt(params.get('projectId'), 10)))
       .subscribe(value => {
         this.scenarioList = value;
-        this.scenarioList
-          .map(scenario => scenario.scenarioGroup)
-          .forEach(groupName => {
-            if (groupName && this.scenarioGroupList.indexOf(groupName) === -1) {
-              this.scenarioGroupList.push(groupName);
-            }
-          });
       });
   }
 
@@ -96,7 +78,6 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
 
   selectGroup(group?: string): boolean {
     this.filter = new Scenario();
-    this.filter.scenarioGroup = group;
 
     this.router.navigate([], {queryParams: {scenarioGroup: group ? group : ''}});
     this.updateFailCountSum();
@@ -118,7 +99,6 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
   updateSelectAllFlag() {
     if (this.scenarioList) {
       this.selectAllFlag = this.scenarioList
-        .filter(s => !this.filter || s.scenarioGroup == this.filter.scenarioGroup)
         .filter(s => !s._selected).length === 0;
     } else {
       this.selectAllFlag = false;
@@ -126,11 +106,7 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
   }
 
   isDisplayScenario(scenario: Scenario) {
-    return !this.filter ||
-      (!this.filter.scenarioGroup && !scenario.scenarioGroup) ||
-      (this.filter.scenarioGroup && scenario && scenario.scenarioGroup &&
-          scenario.scenarioGroup === this.filter.scenarioGroup
-      );
+    return true;
   }
 
   executeSelectedScenarios() {
@@ -179,16 +155,12 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
   // noinspection JSUnusedLocalSymbols
   onCbStateChange(event: any, scenario: Scenario) {
     this.selectAllFlag = !scenario._selected && this.scenarioList
-      .filter(s => !this.filter || s.scenarioGroup == this.filter.scenarioGroup)
       .filter(s => s !== scenario && !s._selected).length === 0;
   }
 
   saveNewScenario() {
     const newScenario = new Scenario();
     newScenario.name = this.newScenarioName;
-    if (this.filter && this.filter.scenarioGroup) {
-      newScenario.scenarioGroup = this.filter.scenarioGroup;
-    }
 
     const toasty = this.customToastyService.saving('Сохранение сценария...', 'Сохранение может занять некоторое время...');
     this.projectService.createScenario(this.project, newScenario)
@@ -212,8 +184,7 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
     this.scenarioComponentList
       .filter(item => item.scenario._selected && this.isDisplayScenario(item.scenario) && item.scenario.hasResults)
       .forEach(item => {
-        const identity = new ScenarioIdentity(item.projectCode, item.scenario.scenarioGroup, item.scenario.code);
-        scenarioIdentities.push(identity);
+        scenarioIdentities.push(item.scenario.id);
       });
 
     this.scenarioService

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.bsc.test.at.executor.model.Project;
 import ru.bsc.test.autotester.exception.ResourceNotFoundException;
 import ru.bsc.test.autotester.mapper.ProjectRoMapper;
+import ru.bsc.test.autotester.mapper.ScenarioRoMapper;
 import ru.bsc.test.autotester.ro.ProjectRo;
 import ru.bsc.test.autotester.ro.ProjectSearchRo;
 import ru.bsc.test.autotester.ro.ScenarioRo;
@@ -43,16 +44,18 @@ public class RestProjectController {
     private final ProjectService projectService;
     private final ScenarioService scenarioService;
     private final ProjectRoMapper projectRoMapper;
+    private final ScenarioRoMapper scenarioRoMapper;
 
     @Autowired
     public RestProjectController(
             ProjectService projectService,
             ScenarioService scenarioService,
-            ProjectRoMapper projectRoMapper
-    ) {
+            ProjectRoMapper projectRoMapper,
+            ScenarioRoMapper scenarioRoMapper) {
         this.projectService = projectService;
         this.scenarioService = scenarioService;
         this.projectRoMapper = projectRoMapper;
+        this.scenarioRoMapper = scenarioRoMapper;
     }
 
     @RequestMapping
@@ -60,18 +63,18 @@ public class RestProjectController {
         return projectRoMapper.convertProjectListToProjectRoList(projectService.findAll());
     }
 
-    @RequestMapping(value = "{projectCode}", method = RequestMethod.GET)
-    public ProjectRo findOne(@PathVariable String projectCode) {
-        Project project = projectService.findOne(projectCode);
+    @RequestMapping(value = "{projectId}", method = RequestMethod.GET)
+    public ProjectRo findOne(@PathVariable Long projectId) {
+        Project project = projectService.findOne(projectId);
         if (project != null) {
             return projectRoMapper.projectToProjectRo(project);
         }
         throw new ResourceNotFoundException();
     }
 
-    @RequestMapping(value = "{projectCode}", method = RequestMethod.PUT)
-    public ProjectRo saveOne(@PathVariable String projectCode, @RequestBody ProjectRo projectRo) {
-        return projectService.updateFromRo(projectCode, projectRo);
+    @RequestMapping(value = "{projectId}", method = RequestMethod.PUT)
+    public ProjectRo saveOne(@PathVariable Long projectId, @RequestBody ProjectRo projectRo) {
+        return projectService.updateFromRo(projectId, projectRo);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
@@ -79,23 +82,23 @@ public class RestProjectController {
         return projectService.createFromRo(projectRo);
     }
 
-    @RequestMapping(value = "{projectCode}/scenarios", method = RequestMethod.GET)
-    public List<ScenarioRo> getScenarios(@PathVariable String projectCode) {
-        return projectRoMapper.convertScenarioListToScenarioRoList(scenarioService.findAllByProject(projectCode));
+    @RequestMapping(value = "{projectId}/scenarios", method = RequestMethod.GET)
+    public List<ScenarioRo> getScenarios(@PathVariable Long projectId) {
+        return scenarioRoMapper.convertScenarioListToScenarioRoList(scenarioService.findAllByProject(projectId));
     }
 
-    @RequestMapping(value = "{projectCode}/scenarios", method = RequestMethod.POST)
-    public ScenarioRo newScenario(@PathVariable String projectCode, @RequestBody ScenarioRo scenarioRo) throws IOException {
-        ScenarioRo savedScenario = scenarioService.addScenarioToProject(projectCode, scenarioRo);
+    @RequestMapping(value = "{projectId}/scenarios", method = RequestMethod.POST)
+    public ScenarioRo newScenario(@PathVariable Long projectId, @RequestBody ScenarioRo scenarioRo) throws IOException {
+        ScenarioRo savedScenario = scenarioService.addScenarioToProject(scenarioRo);
         if (savedScenario == null) {
             throw new ResourceNotFoundException();
         }
         return savedScenario;
     }
 
-    @RequestMapping(value = "{projectCode}/search", method = RequestMethod.POST)
-    public List<ScenarioRo> searchByMethod(@PathVariable String projectCode, @RequestBody ProjectSearchRo projectSearchRo) {
-        return scenarioService.findScenarioByStepRelativeUrl(projectCode, projectSearchRo);
+    @RequestMapping(value = "search", method = RequestMethod.POST)
+    public List<ScenarioRo> searchByMethod(@RequestBody ProjectSearchRo projectSearchRo) {
+        return scenarioService.findScenarioByStepRelativeUrl(projectSearchRo);
     }
 
 }

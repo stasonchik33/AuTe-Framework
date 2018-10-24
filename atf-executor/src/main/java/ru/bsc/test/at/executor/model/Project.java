@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -42,8 +43,8 @@ public class Project implements Serializable, AbstractModel {
     private static final long serialVersionUID = 7331632683933716938L;
 
     @Id
+    @GeneratedValue
     private Long id;
-    private String code;
     private String name;
     @OneToMany(mappedBy = "project")
     private List<Scenario> scenarioList = new LinkedList<>();
@@ -59,11 +60,11 @@ public class Project implements Serializable, AbstractModel {
     private AmqpBroker amqpBroker;
     private Long mqCheckInterval;
     private Integer mqCheckCount;
+    private String directoryPath;
 
     public Project copy() {
         Project project = new Project();
         project.setName(getName());
-        project.setCode(getCode() + "_COPY");
         project.setUseRandomTestId(getUseRandomTestId());
         project.setTestIdHeaderName(getTestIdHeaderName());
         project.setStand(getStand().copy());
@@ -82,7 +83,7 @@ public class Project implements Serializable, AbstractModel {
 
     @Override
     public String toString() {
-        return "Project{" + code + '}';
+        return "Project{" + id + '}';
     }
 
     public Boolean getUseRandomTestId() {

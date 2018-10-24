@@ -41,7 +41,7 @@ public class MockRequestsAttachExtractor extends AbstractAttachExtractor<StepRes
 
     @Override
     public List<Attachment> extract(File resultDirectory, StepResult result) {
-        List<ExpectedServiceRequest> requests = result.getStep().getExpectedServiceRequests();
+        List<ExpectedServiceRequest> requests = result.getStep().getExpectedServiceRequestList();
         if (CollectionUtils.isEmpty(requests)) {
             return null;
         }

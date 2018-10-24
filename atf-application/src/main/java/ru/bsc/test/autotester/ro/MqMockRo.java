@@ -26,14 +26,8 @@ import java.util.List;
 @Getter
 @Setter
 public class MqMockRo {
-    private String code;
     private String sourceQueueName;
     private String httpUrl;
     private String xpath;
     private List<MqMockResponseRo> responses;
-
-    @Deprecated
-    private String responseBody;
-    @Deprecated
-    private String destinationQueueName;
 }

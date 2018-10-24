@@ -34,7 +34,6 @@ import java.util.Map;
 public class StepResult {
 
     private String testId;
-    private String projectCode;
     private Step step;
     private StepResultType result;
     private String details;
@@ -53,8 +52,7 @@ public class StepResult {
     private Map<String, Object> scenarioVariables;
     private List<String> sqlQueryList;
 
-    public StepResult(String projectCode, Step step) {
-        this.projectCode = projectCode;
+    public StepResult(Step step) {
         this.step = step;
     }
 

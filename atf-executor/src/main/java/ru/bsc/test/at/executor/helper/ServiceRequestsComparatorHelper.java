@@ -110,11 +110,11 @@ public class ServiceRequestsComparatorHelper {
             return;
         }
 
-        if (step.getExpectedServiceRequests().isEmpty()) {
+        if (step.getExpectedServiceRequestList().isEmpty()) {
             return;
         }
 
-        for (ExpectedServiceRequest request : step.getExpectedServiceRequests()) {
+        for (ExpectedServiceRequest request : step.getExpectedServiceRequestList()) {
             checkExpectedServiceRequest(project, variables, wireMockAdmin, testId, request);
         }
     }

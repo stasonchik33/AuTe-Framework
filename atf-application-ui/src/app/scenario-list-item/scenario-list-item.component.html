@@ -21,7 +21,7 @@
     <div class="col-sm-7">
       <label>
         <input type="checkbox" title="Select" [(ngModel)]="scenario._selected" (click)="onClick()"/>
-        <a [routerLink]="['/project/' + projectCode + '/scenario/' + (scenario.scenarioGroup ? scenario.scenarioGroup + '/' : '') + scenario.code]">{{scenario.name}}</a>
+        <a [routerLink]="['/scenario/' + scenario.id]">{{scenario.name}}</a>
       </label>
     </div>
     <div class="col-sm-1">

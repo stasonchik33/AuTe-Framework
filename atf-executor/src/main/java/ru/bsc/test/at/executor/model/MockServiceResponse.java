@@ -18,11 +18,11 @@
 
 package ru.bsc.test.at.executor.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,20 +36,18 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "code")
 @Entity
 @Table(name = "mock_service_response")
 public class MockServiceResponse implements AbstractModel {
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "step_id")
     private Step step;
-    private String code;
     private String serviceUrl;
     private String responseBody;
-    private String responseBodyFile;
     private Integer httpStatus;
     private String contentType;
     private String userName;
@@ -69,7 +67,7 @@ public class MockServiceResponse implements AbstractModel {
         response.setPassword(getPassword());
         response.setPathFilter(getPathFilter());
         if(headers != null) {
-            response.setHeaders(headers.stream().map(h -> h.copy()).collect(Collectors.toList()));
+            response.setHeaders(headers.stream().map(HeaderItem::copy).collect(Collectors.toList()));
         }
         return response;
     }

@@ -25,11 +25,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import ru.bsc.test.at.util.YamlUtils;
-import ru.bsc.test.autotester.properties.EnvironmentProperties;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by sdoroshin on 21.03.2017.
@@ -47,10 +42,5 @@ public class SpringRootConfig {
         commonsMultipartResolver.setMaxUploadSize(50 * 1024 * 1024);
         commonsMultipartResolver.setMaxInMemorySize(1024 * 1024);
         return commonsMultipartResolver;
-    }
-
-    @Bean
-    public EnvironmentProperties environmentProperties() throws IOException {
-        return YamlUtils.loadAs(new File("env.yml"), EnvironmentProperties.class);
     }
 }

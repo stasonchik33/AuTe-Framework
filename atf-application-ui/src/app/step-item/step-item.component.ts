@@ -28,8 +28,8 @@ import {SqlData} from '../model/sql-data';
 import {ScenarioVariableFromMqRequest} from '../model/scenario-variable-from-mq-request';
 import {NameValueProperty} from '../model/name-value-property';
 import {StepService} from '../service/step.service';
-import {MqMessage} from "../model/mq-message";
-import {MqMockResponse} from "../model/mq-mock-response";
+import {MqMessage} from '../model/mq-message';
+import {MqMockResponse} from '../model/mq-mock-response';
 
 @Component({
   selector: 'app-step-item',
@@ -79,7 +79,7 @@ export class StepItemComponent implements OnInit , DoCheck {
   ) { }
 
   ngOnInit() {
-    this.oldStep = this.stepService.copyStep(this.step);
+    this.oldStep = Object.assign({}, this.step);
   }
 
   calculateStepMode(): string {
@@ -296,13 +296,13 @@ export class StepItemComponent implements OnInit , DoCheck {
   }
 
   ngDoCheck(): void {
-    if(!this.stepService.equals(this.step, this.oldStep)){
+    if (!this.stepService.equals(this.step, this.oldStep)) {
       this.onChange.emit(this.step);
     }
   }
 
   resetChangeState(): void {
-    this.oldStep = this.stepService.copyStep(this.step);
+    this.oldStep = Object.assign({}, this.step);
   }
 
 }

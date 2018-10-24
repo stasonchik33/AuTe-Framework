@@ -27,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.bsc.test.autotester.mapper.ExecutionResultRoMapper;
 import ru.bsc.test.autotester.mapper.StepRoMapper;
 import ru.bsc.test.autotester.ro.ExecutionResultRo;
-import ru.bsc.test.autotester.ro.ScenarioIdentityRo;
+import ru.bsc.test.autotester.ro.GetScenarioReportRo;
+import ru.bsc.test.autotester.ro.GetScenarioResultsRo;
 import ru.bsc.test.autotester.ro.StepResultRo;
 import ru.bsc.test.autotester.service.ScenarioService;
 
@@ -74,15 +75,15 @@ public class RestExecutionController {
     }
 
     @RequestMapping(value = "/results", method = POST)
-    public List<StepResultRo> getResults(@RequestBody ScenarioIdentityRo identity) {
-        return stepRoMapper.convertStepResultListToStepResultRoWithDiff(scenarioService.getResult(identity));
+    public List<StepResultRo> getResults(@RequestBody GetScenarioResultsRo identity) {
+        return stepRoMapper.convertStepResultListToStepResultRoWithDiff(scenarioService.getResult(identity.getId()));
     }
 
     @RequestMapping(value = "/report", method = POST, produces="application/zip")
-    public void getReport(@RequestBody List<ScenarioIdentityRo> identities, HttpServletResponse response) throws Exception {
+    public void getReport(@RequestBody GetScenarioReportRo identities, HttpServletResponse response) throws Exception {
         response.addHeader("Content-Disposition", "attachment; filename=\"report.zip\"");
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
-            scenarioService.getReport(identities, zipOutputStream);
+            scenarioService.getReport(identities.getIdList(), zipOutputStream);
         }
     }
 

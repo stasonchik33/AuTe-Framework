@@ -22,6 +22,7 @@ package ru.bsc.test.at.executor.model;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,6 +37,7 @@ public class ScenarioVariableFromMqRequest implements Serializable, AbstractMode
     private static final long serialVersionUID = 5716534964482145701L;
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "step_id")

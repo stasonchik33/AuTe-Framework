@@ -59,12 +59,10 @@ export function HttpLoaderFactory(http: Http) {
 const routes: Routes = [
   { path: '', component: ProjectListComponent },
   { path: 'help', component: HelpComponent },
-  { path: 'project/:projectCode', component: ProjectDetailComponent },
-  { path: 'project/:projectCode/settings', component: ProjectSettingsComponent },
-  { path: 'project/:projectCode/scenario/:scenarioCode/settings', component: ScenarioSettingsComponent },
-  { path: 'project/:projectCode/scenario/:scenarioGroup/:scenarioCode/settings', component: ScenarioSettingsComponent },
-  { path: 'project/:projectCode/scenario/:scenarioCode', component: ScenarioDetailComponent },
-  { path: 'project/:projectCode/scenario/:scenarioGroup/:scenarioCode', component: ScenarioDetailComponent },
+  { path: 'project/:projectId', component: ProjectDetailComponent },
+  { path: 'project/:projectId/settings', component: ProjectSettingsComponent },
+  { path: 'scenario/:scenarioId', component: ScenarioDetailComponent },
+  { path: 'scenario/:scenarioId/settings', component: ScenarioSettingsComponent },
 
 ];
 

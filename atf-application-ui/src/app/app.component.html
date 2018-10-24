@@ -28,7 +28,7 @@
       <a class="navbar-brand" href="#">BSC AutoTester</a>
     </div>
     <div class="navbar-locale">
-      <select [(ngModel)]="locale" (change)="changeLocale()">
+      <select [(ngModel)]="locale" (change)="changeLocale()" title="">
         <option *ngFor="let lang of langs" [value]="lang">{{lang}}</option>
       </select>
     </div>
@@ -53,10 +53,6 @@
   <div class="help-block" *ngIf="applicationVersion">
     <b>application: </b>
     {{applicationVersion.implementationVersion}} {{applicationVersion.implementationDate}}
-  </div>
-  <div class="help-block" *ngFor="let version of projectsWiremockVersions">
-    <b>{{version.projectCode}} wiremock: </b>
-    {{version.version.implementationVersion}} {{version.version.implementationDate}}
   </div>
 </div>
 <ng2-toasty [position]="'top-right'"></ng2-toasty>

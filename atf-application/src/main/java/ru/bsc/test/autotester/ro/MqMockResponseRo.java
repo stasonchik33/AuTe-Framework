@@ -30,5 +30,4 @@ import lombok.Setter;
 public class MqMockResponseRo {
     private String responseBody;
     private String destinationQueueName;
-    private String responseFile;
 }

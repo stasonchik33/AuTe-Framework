@@ -25,13 +25,12 @@ import {Step} from '../model/step';
 import {Globals} from '../globals';
 import {StartScenarioInfo} from '../model/start-scenario-info';
 import {ExecutionResult} from '../model/execution-result';
-import {ScenarioIdentity} from "../model/scenario-identity";
-import {StepResult} from "../model/step-result";
+import {StepResult} from '../model/step-result';
 
 @Injectable()
 export class ScenarioService {
 
-  public serviceUrl = '/rest/projects';
+  public serviceUrl = '/rest/scenario';
   private headers = new Headers({'Content-Type': 'application/json'});
 
   constructor(
@@ -39,10 +38,9 @@ export class ScenarioService {
     private http: Http
   ) { }
 
-  run(projectCode: string, scenario: Scenario): Observable<StartScenarioInfo> {
-    const scenarioPath = (scenario.scenarioGroup ? scenario.scenarioGroup + '/' : '') + scenario.code;
+  run(scenario: Scenario): Observable<StartScenarioInfo> {
     return this.http.post(
-      this.globals.serviceBaseUrl + this.serviceUrl + '/' + projectCode + '/scenarios/' + scenarioPath + '/start',
+      this.globals.serviceBaseUrl + this.serviceUrl + '/' + scenario.id + '/start',
       {},
       {headers: this.headers}
     ).map(value => value.json() as StartScenarioInfo);
@@ -62,46 +60,39 @@ export class ScenarioService {
     );
   }
 
-  findOne(projectCode: string, scenarioGroup: string, scenarioCode: string): Observable<Scenario> {
-    const scenarioPath = (scenarioGroup ? scenarioGroup + '/' : '') + scenarioCode;
+  findOne(scenarioId: number): Observable<Scenario> {
     return this.http
-      .get(this.globals.serviceBaseUrl + this.serviceUrl + '/' + projectCode + '/scenarios/' + scenarioPath)
+      .get(this.globals.serviceBaseUrl + this.serviceUrl + '/' + scenarioId)
       .map(value => value.json() as Scenario);
   }
 
-  findScenarioSteps(projectCode: string, scenarioGroup: string, scenarioCode: string): Observable<Step[]> {
-    const scenarioPath = (scenarioGroup ? scenarioGroup + '/' : '') + scenarioCode;
+  findScenarioSteps(scenarioId: number): Observable<Step[]> {
     return this.http
-      .get(this.globals.serviceBaseUrl + this.serviceUrl + '/' + projectCode + '/scenarios/' + scenarioPath + '/steps')
+      .get(this.globals.serviceBaseUrl + this.serviceUrl + '/' + scenarioId + '/steps')
       .map(value => value.json() as Step[]);
   }
 
-  saveStepList(projectCode: string, scenario: Scenario, stepList: Step[]): Observable<Step[]> {
-    const scenarioPath = (scenario.scenarioGroup ? scenario.scenarioGroup + '/' : '') + scenario.code;
+  saveStepList(scenario: Scenario, stepList: Step[]): Observable<Step[]> {
     return this.http.put(
-      this.globals.serviceBaseUrl + this.serviceUrl + '/' + projectCode + '/scenarios/' + scenarioPath + '/steps',
+      this.globals.serviceBaseUrl + this.serviceUrl + '/' + scenario.id + '/steps',
       stepList,
       {headers: this.headers}
     ).map(value => value.json() as Step[]);
   }
 
-  saveOne(projectCode: string, scenario: Scenario, scenarioGroup: string): Observable<Scenario> {
-    const scenarioPath = (scenarioGroup ? scenarioGroup+ '/' : '') + scenario.code;
+  saveOne(scenario: Scenario): Observable<Scenario> {
     return this.http.put(
-      this.globals.serviceBaseUrl + this.serviceUrl + '/' + projectCode + '/scenarios/' + scenarioPath,
+      this.globals.serviceBaseUrl + this.serviceUrl + '/' + scenario.id,
       scenario,
       {headers: this.headers}
     ).map(value => value.json() as Scenario);
   }
 
-  deleteOne(projectCode: string, scenario: Scenario): Observable<any> {
-    const scenarioPath = (scenario.scenarioGroup ? scenario.scenarioGroup + '/' : '') + scenario.code;
-    return this.http.delete(
-      this.globals.serviceBaseUrl + this.serviceUrl + '/' + projectCode + '/scenarios/' + scenarioPath
-    );
+  deleteOne(scenario: Scenario): Observable<any> {
+    return this.http.delete(this.globals.serviceBaseUrl + this.serviceUrl + '/' + scenario.id);
   }
 
-  getResults(identity: ScenarioIdentity): Observable<StepResult[]> {
+  getResults(identity: number): Observable<StepResult[]> {
     return this.http.post(this.globals.serviceBaseUrl + '/rest/execution/results', identity)
       .map(data => {
         try {
@@ -113,7 +104,7 @@ export class ScenarioService {
       });
   }
 
-  downloadReport(identities: ScenarioIdentity[]): Observable<Blob> {
+  downloadReport(identities: number[]): Observable<Blob> {
     return this.http.post(
       this.globals.serviceBaseUrl + '/rest/execution/report',
       identities,

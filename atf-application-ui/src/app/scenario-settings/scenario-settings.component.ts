@@ -1,18 +1,18 @@
 /*
- * Copyright 2018 BSC Msc, LLC 
+ * Copyright 2018 BSC Msc, LLC
  *
- * This file is part of the AuTe Framework project 
+ * This file is part of the AuTe Framework project
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0 
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
@@ -34,8 +34,6 @@ export class ScenarioSettingsComponent implements OnInit {
 
   scenario: Scenario;
   project: Project;
-  projectCode: string;
-  sGroup: string;
 
   constructor(
     private router: Router,
@@ -48,33 +46,26 @@ export class ScenarioSettingsComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: ParamMap) => {
-      this.projectCode = params['projectCode'];
 
       this.scenarioService
-        .findOne(this.projectCode, params['scenarioGroup'], params['scenarioCode'])
+        .findOne(params['scenarioId'])
         .subscribe(value => {
           this.scenario = value;
-          this.sGroup = this.scenario.scenarioGroup;
-        });
 
-      this.projectService
-        .findOne(this.projectCode)
-        .subscribe(project => this.project = project);
+          this.projectService
+            .findOne(this.scenario.projectId)
+            .subscribe(project => this.project = project);
+        });
     });
 
   }
 
   save(): void {
     const toasty = this.customToastyService.saving();
-    this.scenarioService.saveOne(this.project.code, this.scenario, this.sGroup)
+    this.scenarioService.saveOne(this.scenario)
       .subscribe(value => {
         this.scenario = value;
-        const scenarioPath = this.scenario.scenarioGroup ? this.scenario.scenarioGroup : '';
-        this.router.navigate([
-          '/project', this.scenario.projectCode,
-          'scenario', scenarioPath, this.scenario.code,
-          'settings'], {replaceUrl: false});
-        this.sGroup = this.scenario.scenarioGroup;
+        this.router.navigate(['/scenario', this.scenario.id, 'settings'], {replaceUrl: false});
         this.customToastyService.success('Сохранено', 'Сценарий сохранен');
       },
         error => this.handleError(error),

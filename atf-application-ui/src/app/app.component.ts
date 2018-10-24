@@ -20,7 +20,6 @@ import {Component, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {VersionService} from './service/version.service';
 import {Version} from './model/version';
-import {WiremockVersion} from './model/wiremock-version';
 
 const LANG_TOKEN = 'bsc_autotester_language';
 
@@ -35,7 +34,6 @@ declare let require: any;
 export class AppComponent implements OnInit {
 
   public applicationVersion: Version;
-  public projectsWiremockVersions: Array<WiremockVersion>;
   langs: string[] = ['en', 'ru'];
   locale: string;
   uiVersion = require('../../package.json').version;
@@ -48,7 +46,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.versionService.getApplicationVersion().subscribe(version => this.applicationVersion = version);
-    this.versionService.getProjectsWiremockVersions().subscribe(version => this.projectsWiremockVersions = version);
   }
 
   changeLocale(): void {

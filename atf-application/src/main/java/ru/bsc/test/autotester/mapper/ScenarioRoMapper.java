@@ -25,6 +25,8 @@ import org.mapstruct.Mappings;
 import ru.bsc.test.at.executor.model.Scenario;
 import ru.bsc.test.autotester.ro.ScenarioRo;
 
+import java.util.List;
+
 @Mapper(config = Config.class)
 public abstract class ScenarioRoMapper {
 
@@ -40,4 +42,17 @@ public abstract class ScenarioRoMapper {
 
         return scenario;
     }
+
+    @Mappings({
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "projectId", source = "project.id"),
+            @Mapping(target = "name", source = "name"),
+            @Mapping(target = "scenarioGroup", source = "scenarioGroup"),
+            @Mapping(target = "stepList", ignore = true),
+            @Mapping(target = "beforeScenarioIgnore", source = "beforeScenarioIgnore"),
+            @Mapping(target = "afterScenarioIgnore", source = "afterScenarioIgnore")
+    })
+    public abstract ScenarioRo scenarioToScenarioRo(Scenario scenario);
+
+    public abstract List<ScenarioRo> convertScenarioListToScenarioRoList(List<Scenario> scenarioList);
 }

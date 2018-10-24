@@ -26,7 +26,7 @@ import {Globals} from '../globals';
 @Injectable()
 export class StepService {
 
-  public serviceUrl = '/rest/projects';
+  public serviceUrl = '/rest/step';
   private headers = new Headers({'Content-Type': 'application/json'});
 
   static isEquals(a, b): Boolean {
@@ -110,26 +110,12 @@ export class StepService {
     private http: Http
   ) { }
 
-  saveStep(projectCode: string, scenarioGroup: string, scenarioCode: string, step: Step): Observable<Step> {
-    const scenarioPath = (scenarioGroup ? scenarioGroup + '/' : '') + scenarioCode;
+  saveStep(scenarioId: number, step: Step): Observable<Step> {
     return this.http.put(
-      this.globals.serviceBaseUrl + this.serviceUrl + '/' + projectCode + '/scenarios/' + scenarioPath + '/steps/' + step.code,
+      this.globals.serviceBaseUrl + this.serviceUrl + '/' + scenarioId + '/' + step.id,
       step,
       {headers: this.headers}
     ).map(value => value.json() as Step);
-  }
-
-  cloneStep(projectCode: string, scenarioGroup: string, scenarioCode: string, step: Step): Observable<Step> {
-    const scenarioPath = (scenarioGroup ? scenarioGroup + '/' : '') + scenarioCode;
-    return this.http.post(
-      this.globals.serviceBaseUrl + this.serviceUrl + '/' + projectCode + '/scenarios/' + scenarioPath + '/steps/' + step.code + '/clone',
-      {},
-      {headers: this.headers}
-    ).map(value => value.json() as Step);
-  }
-
-  copyStep(step: Step): Step {
-    return Object.assign({}, step);
   }
 
   equals(s1: Step, s2: Step): boolean {

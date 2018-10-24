@@ -24,7 +24,7 @@ import ru.bsc.test.at.executor.model.SqlResultType;
 
 @Getter
 @Setter
-public class SQLDataRo implements AbstractRo {
+public class SqlDataRo implements AbstractRo {
     private static final long serialVersionUID = -4110884518055434593L;
 
     private String sql;

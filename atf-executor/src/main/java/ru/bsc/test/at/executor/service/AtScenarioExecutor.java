@@ -55,7 +55,7 @@ public class AtScenarioExecutor implements Executor<ScenarioExecutorRequest> {
                 MqClient mqClient = project.getAmqpBroker() != null ? new MqClient(project.getAmqpBroker()) : null
         ) {
             // перед выполнением каждого сценария выполнять предварительный сценарий, заданный в свойствах проекта (например, сценарий авторизации)
-            Scenario beforeScenario = scenarioExecutorRequest.getScenario().getBeforeScenarioIgnore() ? null : findScenarioByPath(project.getBeforeScenarioPath(), project.getScenarioList());
+            Scenario beforeScenario = scenarioExecutorRequest.getScenario().getBeforeScenarioIgnore() ? null : project.getBeforeScenario();
             if (beforeScenario != null) {
                 atStepExecutor.execute(
                         new StepExecutorRequest(scenarioExecutorRequest.getConnection(), scenarioExecutorRequest.getStand(), beforeScenario.getStepList(),
@@ -72,7 +72,7 @@ public class AtScenarioExecutor implements Executor<ScenarioExecutorRequest> {
             );
 
             // После выполнения сценария выполнить сценарий, заданный в проекте или в сценарии
-            Scenario afterScenario = scenarioExecutorRequest.getScenario().getAfterScenarioIgnore() ? null : findScenarioByPath(project.getAfterScenarioPath(), project.getScenarioList());
+            Scenario afterScenario = scenarioExecutorRequest.getScenario().getAfterScenarioIgnore() ? null : project.getAfterScenario();
             if (afterScenario != null) {
                 atStepExecutor.execute(new StepExecutorRequest(scenarioExecutorRequest.getConnection(), scenarioExecutorRequest.getStand(),
                         afterScenario.getStepList(), project, scenarioExecutorRequest.getStepResultList(), httpClient,
@@ -89,34 +89,4 @@ public class AtScenarioExecutor implements Executor<ScenarioExecutorRequest> {
         }
 
     }
-
-    private Scenario findScenarioByPath(String path, List<Scenario> scenarioList) {
-        log.debug("findScenarioByPath {}", path);
-        if (path == null) {
-            log.warn("findScenarioByPath: path is null, return null");
-            return null;
-        }
-        String scenarioCode;
-        String scenarioGroupCode;
-        String[] scenarioPathParts = path.split("/");
-        if (scenarioPathParts.length == 1) {
-            scenarioGroupCode = null;
-            scenarioCode = scenarioPathParts[0];
-        } else if (scenarioPathParts.length == 2) {
-            scenarioGroupCode = scenarioPathParts[0];
-            scenarioCode = scenarioPathParts[1];
-        } else {
-            log.warn("findScenarioByPath: NOT FOUND!");
-            return null;
-        }
-
-        Scenario result = scenarioList.stream()
-                .filter(scenario -> Objects.equals(scenario.getCode(), scenarioCode))
-                .filter(scenario -> scenarioGroupCode == null || Objects.equals(scenarioGroupCode, scenario.getScenarioGroup()))
-                .findAny()
-                .orElse(null);
-        log.debug("findScenarioByPath result {}", result);
-        return result;
-    }
-
 }

@@ -21,7 +21,6 @@ package ru.bsc.test.autotester.service;
 import ru.bsc.test.at.executor.model.Project;
 import ru.bsc.test.autotester.ro.ProjectRo;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,13 +31,9 @@ public interface ProjectService {
 
     List<Project> findAll();
 
-    Project findOne(String projectCode);
+    Project findOne(Long projectId);
 
-    ProjectRo updateFromRo(String projectCode, ProjectRo projectRo);
+    ProjectRo updateFromRo(Long projectId, ProjectRo projectRo);
 
-    ProjectRo createFromRo(ProjectRo projectRo) throws IOException;
-
-    void addNewGroup(String projectCode, String groupName) throws Exception;
-
-    void renameGroup(String projectCode, String oldGroupName, String newGroupName) throws Exception;
+    ProjectRo createFromRo(ProjectRo projectRo);
 }

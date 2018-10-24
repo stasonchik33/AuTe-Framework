@@ -20,19 +20,15 @@
   <div class="breadcrumb-search">
     <ol class="breadcrumb" *ngIf="scenario">
       <li class="breadcrumb-item"><a [routerLink]="'/'">{{'Projects' | translate}}</a></li>
-      <li class="breadcrumb-item"><a [routerLink]="['/project', scenario.projectCode]">{{scenario.projectCode}}.
-        {{scenario.projectName}}</a></li>
-      <li class="breadcrumb-item" *ngIf="scenario.scenarioGroup">
-        <a [routerLink]="['/project', scenario.projectCode]" [queryParams]="{scenarioGroup: scenario.scenarioGroup}">{{scenario.scenarioGroup}}</a>
-      </li>
-      <li class="breadcrumb-item active">{{scenario.code}}. {{scenario.name}}</li>
+      <li class="breadcrumb-item"><a [routerLink]="['/project', scenario.id]">{{scenario.id}}. {{scenario.projectName}}</a></li>
+      <li class="breadcrumb-item active">{{scenario.id}}. {{scenario.name}}</li>
     </ol>
-    <app-search [projectCode]="scenario?.projectCode"></app-search>
+    <app-search></app-search>
   </div>
 
   <div *ngIf="scenario">
-    <app-scenario-title-item [scenario]="scenario" [projectCode]="projectCode" (onSaveSteps)="saveSteps()" [stepList]="stepList"></app-scenario-title-item>
-    <a [routerLink]="['/project/' + projectCode + '/scenario/' + (scenario.scenarioGroup ? scenario.scenarioGroup + '/' : '') + scenario.code + '/settings']">{{'Settings' | translate}}</a>
+    <app-scenario-title-item [scenario]="scenario" [projectId]="scenario.projectId" (onSaveSteps)="saveSteps()" [stepList]="stepList"></app-scenario-title-item>
+    <a [routerLink]="['/scenario/' + scenario.id + '/settings']">{{'Settings' | translate}}</a>
   </div>
   <hr/>
   <div class="help-block" *ngIf="!stepList">

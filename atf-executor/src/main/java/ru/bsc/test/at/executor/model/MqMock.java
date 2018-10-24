@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -37,24 +38,19 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "mq_mock")
-public class MqMock implements AbstractModel, CodeAccessible {
+public class MqMock implements AbstractModel {
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "step_id")
     private Step step;
-    private String code;
     private String sourceQueueName;
     @OneToMany(mappedBy = "mqMock")
     private List<MqMockResponse> responses = new LinkedList<>();
     private String httpUrl;
     private String xpath;
-
-    @Deprecated
-    private String responseBody;
-    @Deprecated
-    private String destinationQueueName;
 
     protected MqMock copy() {
         MqMock response = new MqMock();
@@ -62,9 +58,6 @@ public class MqMock implements AbstractModel, CodeAccessible {
         response.setHttpUrl(getHttpUrl());
         getResponses().forEach(r -> response.getResponses().add(r.copy()));
         response.setXpath(getXpath());
-
-        response.setResponseBody(getResponseBody());
-        response.setDestinationQueueName(getDestinationQueueName());
         return response;
     }
 }

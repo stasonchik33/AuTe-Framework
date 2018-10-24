@@ -33,14 +33,12 @@ import java.util.Map;
 public class StepRo implements AbstractRo {
     private static final long serialVersionUID = -4795596079038167133L;
 
-    private String code;
+    private Long id;
     private String relativeUrl;
     private String requestMethod;
     private String request;
-    private String requestFile;
     private String requestHeaders;
     private String expectedResponse;
-    private String expectedResponseFile;
     private Boolean expectedResponseIgnore;
     private Integer expectedStatusCode;
     private String jsonXPath;
@@ -56,7 +54,7 @@ public class StepRo implements AbstractRo {
     private List<MqMessageRo> mqMessages = new ArrayList<>();
     private String responseCompareMode;
     private List<FormDataRo> formDataList;
-    private List<SQLDataRo> sqlDataList;
+    private List<SqlDataRo> sqlDataList;
     private Boolean multipartFormData;
     private String jsonCompareMode;
     private String script;
@@ -69,19 +67,6 @@ public class StepRo implements AbstractRo {
     private List<ExpectedMqRequestRo> expectedMqRequestList;
     private List<ScenarioVariableFromMqRequestRo> scenarioVariableFromMqRequestList;
     private String stepMode;
-
-    @Deprecated
-    private String sql;
-    @Deprecated
-    private String sqlSavedParameter;
-    @Deprecated
-    private String mqName;
-    @Deprecated
-    private String mqMessage;
-    @Deprecated
-    private String mqMessageFile;
-    @Deprecated
-    private List<NameValuePropertyRo> mqPropertyList;
 
     private String mqOutputQueueName;
     private String mqInputQueueName;

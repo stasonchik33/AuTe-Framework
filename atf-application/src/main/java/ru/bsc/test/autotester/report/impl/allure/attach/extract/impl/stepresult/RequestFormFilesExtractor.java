@@ -22,12 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.bsc.test.at.executor.model.FieldType;
 import ru.bsc.test.at.executor.model.FormData;
 import ru.bsc.test.at.executor.model.StepResult;
-import ru.bsc.test.autotester.properties.EnvironmentProperties;
 import ru.bsc.test.autotester.report.impl.allure.attach.extract.impl.AbstractAttachExtractor;
 import ru.yandex.qatools.allure.model.Attachment;
 
@@ -48,13 +46,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RequestFormFilesExtractor extends AbstractAttachExtractor<StepResult> {
 
-    private final String projectRepositoryPath;
-
-    @Autowired
-    public RequestFormFilesExtractor(EnvironmentProperties environmentProperties) {
-        this.projectRepositoryPath = environmentProperties.getProjectsDirectoryPath();
-    }
-
     @Override
     public List<Attachment> extract(File resultDirectory, StepResult result) {
         if (CollectionUtils.isEmpty(result.getStep().getFormDataList())) {
@@ -63,15 +54,15 @@ public class RequestFormFilesExtractor extends AbstractAttachExtractor<StepResul
         return result.getStep().getFormDataList().stream()
                 .filter(data -> data.getFieldType() == FieldType.FILE)
                 .filter(data -> StringUtils.isNotEmpty(data.getFilePath()))
-                .map(data -> mapDataToAttachment(resultDirectory, result, data))
+                .map(data -> mapDataToAttachment(resultDirectory, data))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    private Attachment mapDataToAttachment(File resultDirectory, StepResult stepResult, FormData formData) {
+    private Attachment mapDataToAttachment(File resultDirectory, FormData formData) {
         String extension = FilenameUtils.getExtension(formData.getFilePath());
         String relativePath = getAttachRelativePath(formData.getFieldName(), extension);
-        Path sourcePath = Paths.get(projectRepositoryPath, stepResult.getProjectCode(), formData.getFilePath());
+        Path sourcePath = Paths.get(formData.getFilePath());
         Path attachPath = resultDirectory.toPath().resolve(relativePath);
         String contentType;
         try {

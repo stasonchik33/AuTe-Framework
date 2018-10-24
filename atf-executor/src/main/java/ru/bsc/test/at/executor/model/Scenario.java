@@ -19,9 +19,9 @@
 package ru.bsc.test.at.executor.model;
 
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -41,12 +41,12 @@ public class Scenario implements Serializable, AbstractModel {
     private static final long serialVersionUID = -3442194270361216323L;
 
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
-    private String code;
     private String name;
     private String scenarioGroup;
 
@@ -79,9 +79,5 @@ public class Scenario implements Serializable, AbstractModel {
 
     public Boolean getAfterScenarioIgnore() {
         return afterScenarioIgnore != null && afterScenarioIgnore;
-    }
-
-    public String getPath() {
-        return StringUtils.isNotEmpty(scenarioGroup) ? scenarioGroup + "/" + code : code;
     }
 }
