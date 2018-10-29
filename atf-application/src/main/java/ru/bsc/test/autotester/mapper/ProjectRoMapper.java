@@ -98,6 +98,7 @@ public abstract class ProjectRoMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
+            @Mapping(target = "project", ignore = true),
             @Mapping(target = "serviceUrl", source = "serviceUrl"),
             @Mapping(target = "dbUrl", source = "dbUrl"),
             @Mapping(target = "dbUser", source = "dbUser"),

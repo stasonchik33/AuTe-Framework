@@ -23,21 +23,28 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.cookie.RFC2109SpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.tika.Tika;
-import ru.bsc.test.at.client.impl.http.HTTPClientBuilder;
 import ru.bsc.test.at.executor.helper.client.api.Client;
 import ru.bsc.test.at.executor.helper.client.api.ClientCommonResponse;
 import ru.bsc.test.at.executor.model.FieldType;
@@ -58,15 +65,26 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HttpClient implements Client<ClientHttpRequest, ClientCommonResponse> {
     private final CloseableHttpClient httpClient;
+    private final CookieStore cookieStore;
     private final HttpClientContext context;
 
     public HttpClient() {
+        RequestConfig customizedRequestConfig = RequestConfig.custom().setCookieSpec("my").build();
+        cookieStore = new BasicCookieStore();
         context = HttpClientContext.create();
-        httpClient = new HTTPClientBuilder().withSllContext().withGlobalConfig().withCookiesStore().build();
+        context.setCookieStore(cookieStore);
+        Registry<CookieSpecProvider> registry = RegistryBuilder
+                .<CookieSpecProvider> create()
+                .register("my", new RFC2109SpecProvider()).build();
+        context.setCookieSpecRegistry(registry);
+        httpClient = HttpClients.custom()
+                .setDefaultCookieSpecRegistry(registry)
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultRequestConfig(customizedRequestConfig).build();
     }
 
     public List<Cookie> getCookies() {
-        return context.getCookieStore().getCookies();
+        return cookieStore.getCookies();
     }
 
     @Override
