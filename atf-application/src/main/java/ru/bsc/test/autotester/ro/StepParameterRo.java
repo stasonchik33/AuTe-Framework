@@ -32,6 +32,7 @@ import java.io.Serializable;
 public class StepParameterRo implements Serializable{
     private static final long serialVersionUID = -2094782435995324148L;
 
+    private Long id;
     private String name;
     private String value;
 }

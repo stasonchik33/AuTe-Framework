@@ -30,10 +30,12 @@ public class ScenarioResult {
   private Scenario scenario;
   private List<StepResult> stepResultList;
   private Boolean failed;
+  private Integer totalSteps;
 
-  public ScenarioResult(Scenario scenario, List<StepResult> stepResultList) {
+  public ScenarioResult(Scenario scenario, List<StepResult> stepResultList, Integer totalSteps) {
     this.scenario = scenario;
     this.stepResultList = stepResultList;
+    this.totalSteps = totalSteps;
   }
 
   public List<StepResult> getStepResultList() {
@@ -42,6 +44,10 @@ public class ScenarioResult {
 
   public Scenario getScenario() {
     return scenario;
+  }
+
+  public Integer getTotalSteps() {
+    return totalSteps;
   }
 
   public boolean isFailed() {

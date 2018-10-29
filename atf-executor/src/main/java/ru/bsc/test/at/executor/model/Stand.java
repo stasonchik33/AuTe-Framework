@@ -20,16 +20,28 @@ package ru.bsc.test.at.executor.model;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
  * Created by sdoroshin on 12.07.2017.
  */
 @Data
+@Entity
+@Table(name = "stand")
 public class Stand implements AbstractModel, Serializable {
     private static final long serialVersionUID = 1616628096472011795L;
 
+    @Id
+    @GeneratedValue
     private Long id;
+    @OneToOne @MapsId
+    private Project project;
     private String serviceUrl;
     private String dbUrl;
     private String dbUser;

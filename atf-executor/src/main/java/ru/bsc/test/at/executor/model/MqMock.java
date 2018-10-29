@@ -48,7 +48,7 @@ public class MqMock implements AbstractModel {
     @JoinColumn(name = "step_id")
     private Step step;
     private String sourceQueueName;
-    @OneToMany(mappedBy = "mqMock", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "mqMock", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MqMockResponse> responses = new LinkedList<>();
     private String httpUrl;
     private String xpath;

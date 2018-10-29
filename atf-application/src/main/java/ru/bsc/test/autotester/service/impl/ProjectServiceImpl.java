@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bsc.test.at.executor.model.Project;
+import ru.bsc.test.at.executor.model.Stand;
 import ru.bsc.test.autotester.mapper.ProjectRoMapper;
 import ru.bsc.test.autotester.repository.ProjectRepository;
 import ru.bsc.test.autotester.ro.ProjectRo;
@@ -60,7 +61,8 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectRo updateFromRo(Long projectId, ProjectRo projectRo) {
         Project project = findOne(projectId);
         if (project != null) {
-            project = projectRepository.save(projectRoMapper.updateProjectFromRo(projectRo));
+            projectRoMapper.updateProject(projectRo, project);
+            project = projectRepository.save(project);
             return projectRoMapper.projectToProjectRo(project);
         }
         return null;
@@ -68,7 +70,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectRo createFromRo(ProjectRo projectRo) {
-        Project project = projectRoMapper.updateProjectFromRo(projectRo);
+        Project project = new Project();
+        projectRoMapper.updateProject(projectRo, project);
+        Stand stand = new Stand();
+        stand.setProject(project);
+        project.setStand(stand);
         project = projectRepository.save(project);
         return projectRoMapper.projectToProjectRo(project);
     }

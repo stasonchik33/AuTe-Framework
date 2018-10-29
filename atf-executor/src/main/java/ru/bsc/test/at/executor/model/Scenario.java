@@ -19,6 +19,8 @@
 package ru.bsc.test.at.executor.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -35,7 +37,8 @@ import java.util.List;
 /**
  * Created by sdoroshin on 10.05.2017.
  */
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "scenario")
 public class Scenario implements Serializable, AbstractModel {
@@ -51,7 +54,7 @@ public class Scenario implements Serializable, AbstractModel {
     private String name;
     private String scenarioGroup;
 
-    @OneToMany(mappedBy = "scenario", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "scenario", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Step> stepList = new LinkedList<>();
     private Boolean beforeScenarioIgnore;
     private Boolean afterScenarioIgnore;

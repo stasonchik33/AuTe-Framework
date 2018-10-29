@@ -29,6 +29,7 @@ import lombok.Setter;
 public class ExpectedServiceRequestRo implements AbstractRo {
     private static final long serialVersionUID = -5748544019274406969L;
 
+    private Long id;
     private String serviceName;
     private String expectedServiceRequest;
     private String ignoredTags;

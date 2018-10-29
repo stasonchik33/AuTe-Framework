@@ -55,7 +55,7 @@ public class Step implements Serializable, AbstractModel {
     @JoinColumn(name = "scenario_id")
     private Scenario scenario;
 
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ExpectedServiceRequest> expectedServiceRequestList = new LinkedList<>();
     private String relativeUrl;
     private HTTPMethod requestMethod;
@@ -68,7 +68,7 @@ public class Step implements Serializable, AbstractModel {
     private RequestBodyType requestBodyType = RequestBodyType.JSON;
     private Boolean usePolling;
     private String pollingJsonXPath;
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MockServiceResponse> mockServiceResponseList = new LinkedList<>();
     private Boolean disabled;
     private String stepComment;
@@ -78,12 +78,12 @@ public class Step implements Serializable, AbstractModel {
     @Column(name = "value")
     private Map<String, String> savedValuesCheck = new HashMap<>();
     private ResponseCompareMode responseCompareMode = ResponseCompareMode.JSON;
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<StepParameterSet> stepParameterSetList = new LinkedList<>();
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MqMessage> mqMessages = new LinkedList<>();
     private Boolean multipartFormData;
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<FormData> formDataList = new LinkedList<>();
     private String jsonCompareMode = "NON_EXTENSIBLE";
     private String script;
@@ -92,13 +92,13 @@ public class Step implements Serializable, AbstractModel {
     private String parseMockRequestXPath;
     private String parseMockRequestScenarioVariable;
     private String timeoutMs;
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MqMock> mqMockResponseList = new LinkedList<>();
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ExpectedMqRequest> expectedMqRequestList;
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<SqlData> sqlDataList = new LinkedList<>();
-    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "step", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ScenarioVariableFromMqRequest> scenarioVariableFromMqRequestList;
     private StepMode stepMode;
 

@@ -23,6 +23,7 @@ import org.springframework.util.Assert;
 import ru.bsc.test.at.executor.model.Scenario;
 import ru.bsc.test.at.executor.model.ScenarioResult;
 import ru.bsc.test.at.executor.model.Stand;
+import ru.bsc.test.at.executor.model.Step;
 import ru.bsc.test.at.executor.model.StepResult;
 import ru.bsc.test.at.executor.service.api.Executor;
 import ru.bsc.test.at.executor.service.api.ProjectExecutorRequest;
@@ -61,7 +62,13 @@ public class AtProjectExecutor implements Executor<ProjectExecutorRequest> {
         try (ExecutorJdbcConnectionHolder executorJdbcConnectionHolder = new ExecutorJdbcConnectionHolder(standSet)) {
             for (Scenario scenario : projectExecutorRequest.getScenarioExecuteList()) {
                 List<StepResult> stepResultList = new LinkedList<>();
-                scenarioResultList.add(new ScenarioResult(scenario, stepResultList));
+                Integer totalSteps = scenario.getStepList()
+                        .stream()
+                        .filter(step -> !step.getDisabled())
+                        .map(Step::getStepParameterSetList)
+                        .mapToInt(list -> list != null ? (list.size() == 0 ? 1 : list.size()) : 1)
+                        .sum();
+                scenarioResultList.add(new ScenarioResult(scenario, stepResultList, totalSteps));
                 atScenarioExecutor.execute(
                         new ScenarioExecutorRequest(projectExecutorRequest.getProject(), scenario, projectExecutorRequest.getProject().getStand(),
                                 executorJdbcConnectionHolder.getConnection(projectExecutorRequest.getProject().getStand()),

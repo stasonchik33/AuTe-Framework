@@ -31,6 +31,7 @@ import java.util.List;
 public class MockServiceResponseRo implements AbstractRo {
     private static final long serialVersionUID = -7918346254164488513L;
 
+    private Long id;
     private String serviceUrl;
     private String responseBody;
     private Integer httpStatus;

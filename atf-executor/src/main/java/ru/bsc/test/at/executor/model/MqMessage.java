@@ -54,7 +54,7 @@ public class MqMessage implements Serializable, AbstractModel {
     private Step step;
     private String queueName;
     private String message;
-    @OneToMany(mappedBy = "mqMessage", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "mqMessage", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<NameValueProperty> properties = new LinkedList<>();
 
     public MqMessage copy() {

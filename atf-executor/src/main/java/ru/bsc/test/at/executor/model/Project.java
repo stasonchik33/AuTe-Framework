@@ -31,6 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -47,7 +48,7 @@ public class Project implements Serializable, AbstractModel {
     @GeneratedValue
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "project", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "project", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Scenario> scenarioList = new LinkedList<>();
     @ManyToOne
     @JoinColumn(name = "before_scenario_path")
@@ -55,6 +56,7 @@ public class Project implements Serializable, AbstractModel {
     @ManyToOne
     @JoinColumn(name = "after_scenario_path")
     private Scenario afterScenario;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "project")
     private Stand stand;
     private Boolean useRandomTestId;
     private String testIdHeaderName;
@@ -68,7 +70,9 @@ public class Project implements Serializable, AbstractModel {
         project.setName(getName());
         project.setUseRandomTestId(getUseRandomTestId());
         project.setTestIdHeaderName(getTestIdHeaderName());
-        project.setStand(getStand().copy());
+        if (getStand() != null) {
+            project.setStand(getStand().copy());
+        }
         if (getScenarioList() != null) {
             project.setScenarioList(new LinkedList<>());
             for (Scenario scenario : getScenarioList()) {
@@ -78,7 +82,23 @@ public class Project implements Serializable, AbstractModel {
             }
         }
 
-        project.setAmqpBroker(getAmqpBroker().copy());
+        if (getAmqpBroker() != null) {
+            project.setAmqpBroker(getAmqpBroker().copy());
+        }
+        return project;
+    }
+
+    public Project copyWithoutScenarios() {
+        Project project = new Project();
+        project.setName(getName());
+        project.setUseRandomTestId(getUseRandomTestId());
+        project.setTestIdHeaderName(getTestIdHeaderName());
+        if (getStand() != null) {
+            project.setStand(getStand().copy());
+        }
+        if (getAmqpBroker() != null) {
+            project.setAmqpBroker(getAmqpBroker().copy());
+        }
         return project;
     }
 

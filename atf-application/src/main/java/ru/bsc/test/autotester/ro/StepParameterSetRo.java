@@ -31,6 +31,7 @@ import java.util.List;
 public class StepParameterSetRo implements AbstractRo {
     private static final long serialVersionUID = -8505680675142636322L;
 
+    private Long id;
     private List<StepParameterRo> stepParameterList;
     private String description;
 }

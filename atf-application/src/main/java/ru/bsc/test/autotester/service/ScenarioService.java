@@ -57,7 +57,7 @@ public interface ScenarioService {
 
     List<Scenario> findAllByProject(Long projectId);
 
-    ScenarioRo addScenarioToProject(ScenarioRo scenarioRo);
+    ScenarioRo addScenarioToProject(Project project, ScenarioRo scenarioRo);
 
     void getReport(List<Long> identities, ZipOutputStream executionUuid) throws Exception;
 }

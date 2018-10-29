@@ -54,7 +54,7 @@ public class MockServiceResponse implements AbstractModel {
     private String userName;
     private String password;
     private String pathFilter;
-    @OneToMany(mappedBy = "mockServiceResponse", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "mockServiceResponse", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<HeaderItem> headers;
 
     protected MockServiceResponse copy() {

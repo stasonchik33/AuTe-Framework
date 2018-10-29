@@ -48,7 +48,7 @@ public class StepParameterSet implements AbstractModel {
     @JoinColumn(name = "step_id")
     private Step step;
 
-    @OneToMany(mappedBy = "stepParameterSet", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "stepParameterSet", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<StepParameter> stepParameterList = new LinkedList<>();
     private String description;
 

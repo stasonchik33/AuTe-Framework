@@ -89,7 +89,11 @@ public class RestProjectController {
 
     @RequestMapping(value = "{projectId}/scenarios", method = RequestMethod.POST)
     public ScenarioRo newScenario(@PathVariable Long projectId, @RequestBody ScenarioRo scenarioRo) throws IOException {
-        ScenarioRo savedScenario = scenarioService.addScenarioToProject(scenarioRo);
+        Project project = projectService.findOne(projectId);
+        if (project == null) {
+            throw new ResourceNotFoundException();
+        }
+        ScenarioRo savedScenario = scenarioService.addScenarioToProject(project, scenarioRo);
         if (savedScenario == null) {
             throw new ResourceNotFoundException();
         }

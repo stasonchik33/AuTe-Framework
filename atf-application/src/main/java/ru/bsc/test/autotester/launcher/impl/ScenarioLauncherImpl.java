@@ -18,9 +18,6 @@
 
 package ru.bsc.test.autotester.launcher.impl;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,9 +32,6 @@ import ru.bsc.test.autotester.launcher.api.ScenarioLauncher;
 import ru.bsc.test.autotester.model.ExecutionResult;
 import ru.bsc.test.autotester.repository.ScenarioRepository;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
@@ -48,8 +42,6 @@ import java.util.Set;
 @Component
 @Slf4j
 public class ScenarioLauncherImpl implements ScenarioLauncher {
-
-    private static final ObjectMapper objectMapper = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
     private final ScenarioRepository scenarioRepository;
 
@@ -81,23 +73,13 @@ public class ScenarioLauncherImpl implements ScenarioLauncher {
         }).start();
     }
 
-
     private void processResults(List<ScenarioResult> scenarioResults) {
         for (ScenarioResult scenarioResult : scenarioResults) {
-            try {
-                Scenario scenario = scenarioResult.getScenario();
+            Scenario scenario = scenarioResult.getScenario();
+            scenario = scenarioRepository.findOne(scenario.getId());
+            if (scenario != null) {
                 scenario.setFailed(scenarioResult.isFailed());
-                scenario = scenarioRepository.save(scenario);
-
-                Path path = Paths.get("tmp", "results", scenario.getId().toString());
-                if (!Files.exists(path)) {
-                    Files.createDirectories(path);
-                }
-                Path resultFile = path.resolve("results.json");
-                Files.deleteIfExists(resultFile);
-                objectMapper.writeValue(resultFile.toFile(), scenarioResult.getStepResultList());
-            } catch (IOException e) {
-                log.error("", e);
+                scenarioRepository.save(scenario);
             }
         }
     }

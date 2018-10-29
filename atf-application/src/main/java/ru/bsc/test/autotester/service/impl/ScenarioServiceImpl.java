@@ -49,6 +49,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -104,11 +105,16 @@ public class ScenarioServiceImpl implements ScenarioService {
         startScenarioInfoRo.setRunningUuid(runningUuid);
         runningScriptsMap.put(runningUuid, executionResult);
 
-        scenarioLauncher.launchScenarioFromUI(scenarioList, project, executionResult, stopExecutingSet, runningUuid);
+        List<Scenario> scenarioListCopy = scenarioList.stream().map(scenario -> {
+            Scenario newScenario = scenario.copy();
+            newScenario.setId(scenario.getId());
+            return newScenario;
+        }).collect(Collectors.toList());
+        Project newProject = project.copyWithoutScenarios();
+        newProject.setId(project.getId());
+        scenarioLauncher.launchScenarioFromUI(scenarioListCopy, newProject, executionResult, stopExecutingSet, runningUuid);
         return startScenarioInfoRo;
     }
-
-
 
     @Override
     public void stopExecuting(String executingUuid) {
@@ -224,8 +230,10 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public ScenarioRo addScenarioToProject(ScenarioRo scenarioRo) {
-        Scenario newScenario = scenarioRoMapper.updateScenario(scenarioRo, new Scenario());
+    public ScenarioRo addScenarioToProject(Project project, ScenarioRo scenarioRo) {
+        Scenario newScenario = new Scenario();
+        newScenario.setProject(project);
+        scenarioRoMapper.updateScenario(scenarioRo, newScenario);
         newScenario = scenarioRepository.save(newScenario);
         return scenarioRoMapper.scenarioToScenarioRo(newScenario);
     }

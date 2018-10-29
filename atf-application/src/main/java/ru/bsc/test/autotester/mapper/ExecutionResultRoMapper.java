@@ -60,15 +60,7 @@ public abstract class ExecutionResultRoMapper {
                     .map(scenarioListEntry -> ScenarioResultRo.builder()
                             .scenario(scenarioRoMapper.scenarioToScenarioRo(scenarioListEntry.getScenario()))
                             .stepResultList(stepRoMapper.convertStepResultListToStepResultRo(scenarioListEntry.getStepResultList()))
-                            .totalSteps(scenarioListEntry
-                                    .getScenario()
-                                    .getStepList()
-                                    .stream()
-                                    .filter(step -> !step.getDisabled())
-                                    .map(Step::getStepParameterSetList)
-                                    .mapToInt(list -> list != null ? (list.size() == 0 ? 1 : list.size()) : 1)
-                                    .sum()
-                            ).build()
+                            .totalSteps(scenarioListEntry.getTotalSteps()).build()
                     )
                     .collect(Collectors.toList());
             executionResultRo.setScenarioResultList(scenarioResultList);

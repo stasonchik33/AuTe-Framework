@@ -20,6 +20,7 @@ package ru.bsc.test.autotester.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import ru.bsc.test.at.executor.model.AmqpBroker;
 import ru.bsc.test.at.executor.model.Project;
@@ -29,6 +30,7 @@ import ru.bsc.test.autotester.ro.ProjectRo;
 import ru.bsc.test.autotester.ro.StandRo;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by sdoroshin on 15.09.2017.
@@ -62,7 +64,25 @@ public abstract class ProjectRoMapper {
             @Mapping(target = "mqCheckInterval", ignore = true),
             @Mapping(target = "mqCheckCount", ignore = true),
     })
-    public abstract Project updateProjectFromRo(ProjectRo projectRo);
+    abstract void updateProjectFromRo(ProjectRo projectRo, @MappingTarget Project project);
+
+    public void updateProject(ProjectRo projectRo, Project project) {
+        updateProjectFromRo(projectRo, project);
+
+        project.setBeforeScenario(
+                projectRo.getBeforeScenario() == null ? null :
+                        project.getScenarioList().stream()
+                                .filter(scenario -> Objects.equals(scenario.getId(), projectRo.getBeforeScenario()))
+                                .findAny().orElse(null)
+        );
+
+        project.setAfterScenario(
+                projectRo.getAfterScenario() == null ? null :
+                        project.getScenarioList().stream()
+                                .filter(scenario -> Objects.equals(scenario.getId(), projectRo.getAfterScenario()))
+                                .findAny().orElse(null)
+        );
+    }
 
     abstract public List<ProjectRo> convertProjectListToProjectRoList(List<Project> list);
 
