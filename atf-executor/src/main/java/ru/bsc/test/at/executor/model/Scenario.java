@@ -20,6 +20,7 @@ package ru.bsc.test.at.executor.model;
 
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -50,7 +51,7 @@ public class Scenario implements Serializable, AbstractModel {
     private String name;
     private String scenarioGroup;
 
-    @OneToMany(mappedBy = "scenario")
+    @OneToMany(mappedBy = "scenario", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Step> stepList = new LinkedList<>();
     private Boolean beforeScenarioIgnore;
     private Boolean afterScenarioIgnore;

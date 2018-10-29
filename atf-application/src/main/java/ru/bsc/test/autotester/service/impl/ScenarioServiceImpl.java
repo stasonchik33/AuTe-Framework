@@ -186,11 +186,11 @@ public class ScenarioServiceImpl implements ScenarioService {
 
     @Override
     public List<StepRo> updateStepListFromRo(Long scenarioId, List<StepRo> stepRoList) {
-        Scenario scenario = findOne(scenarioId);
+        final Scenario scenario = scenarioRepository.findOne(scenarioId);
         if (scenario != null) {
             stepRoMapper.updateScenarioStepList(stepRoList, scenario);
-            scenario = scenarioRepository.save(scenario);
-            return stepRoMapper.convertStepListToStepRoList(scenario.getStepList());
+            scenario.getStepList().forEach(step -> step.setScenario(scenario));
+            return stepRoMapper.convertStepListToStepRoList(scenarioRepository.save(scenario).getStepList());
         }
         throw new ResourceNotFoundException();
     }

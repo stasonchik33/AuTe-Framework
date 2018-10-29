@@ -21,6 +21,7 @@ package ru.bsc.test.at.executor.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -47,7 +48,7 @@ public class StepParameterSet implements AbstractModel {
     @JoinColumn(name = "step_id")
     private Step step;
 
-    @OneToMany(mappedBy = "stepParameterSet")
+    @OneToMany(mappedBy = "stepParameterSet", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<StepParameter> stepParameterList = new LinkedList<>();
     private String description;
 

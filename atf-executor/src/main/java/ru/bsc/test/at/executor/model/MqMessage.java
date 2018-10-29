@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -53,7 +54,7 @@ public class MqMessage implements Serializable, AbstractModel {
     private Step step;
     private String queueName;
     private String message;
-    @OneToMany(mappedBy = "mqMessage")
+    @OneToMany(mappedBy = "mqMessage", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<NameValueProperty> properties = new LinkedList<>();
 
     public MqMessage copy() {

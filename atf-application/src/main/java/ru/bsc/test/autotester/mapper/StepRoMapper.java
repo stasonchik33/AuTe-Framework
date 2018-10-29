@@ -27,6 +27,7 @@ import ru.bsc.test.at.executor.model.*;
 import ru.bsc.test.autotester.component.JsonDiffCalculator;
 import ru.bsc.test.autotester.ro.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -45,7 +46,6 @@ public abstract class StepRoMapper {
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "scenario", ignore = true),
-            @Mapping(target = "expectedServiceRequestList", source = "expectedServiceRequestList"),
     })
     public abstract Step updateStep(StepRo stepRo, @MappingTarget Step step);
 
@@ -158,7 +158,22 @@ public abstract class StepRoMapper {
     abstract FormDataRo formDataToRo(FormData formData);
 
     public void updateScenarioStepList(List<StepRo> stepRoList, Scenario scenario) {
-        scenario.setStepList(stepRoList.stream().map(this::convertStepRoToStep).collect(Collectors.toList()));
+        if (scenario.getStepList() == null) {
+            scenario.setStepList(new LinkedList<>());
+        }
+        scenario.getStepList().clear();
+        scenario.getStepList().addAll(stepRoList.stream().map(stepRo -> {
+            Step step = scenario.getStepList().stream()
+                    .filter(s -> Objects.equals(s.getId(), stepRo.getId()))
+                    .findAny().orElse(null);
+            if (step == null) {
+                step = updateStep(stepRo, new Step());
+            } else {
+                step = updateStep(stepRo, step);
+            }
+            step.setScenario(scenario);
+            return step;
+        }).collect(Collectors.toList()));
     }
 
     abstract ScenarioVariableFromMqRequestRo scenarioVariableFromMqRequestToRo(ScenarioVariableFromMqRequest variable);

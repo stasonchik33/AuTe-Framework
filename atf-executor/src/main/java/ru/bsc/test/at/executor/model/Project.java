@@ -24,6 +24,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -46,7 +47,7 @@ public class Project implements Serializable, AbstractModel {
     @GeneratedValue
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Scenario> scenarioList = new LinkedList<>();
     @ManyToOne
     @JoinColumn(name = "before_scenario_path")

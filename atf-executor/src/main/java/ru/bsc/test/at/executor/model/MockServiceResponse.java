@@ -21,6 +21,7 @@ package ru.bsc.test.at.executor.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -53,7 +54,7 @@ public class MockServiceResponse implements AbstractModel {
     private String userName;
     private String password;
     private String pathFilter;
-    @OneToMany(mappedBy = "mockServiceResponse")
+    @OneToMany(mappedBy = "mockServiceResponse", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<HeaderItem> headers;
 
     protected MockServiceResponse copy() {
