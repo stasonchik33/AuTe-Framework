@@ -38,16 +38,12 @@ public class ServiceRequestsComparatorHelperTest {
         invokeCompareWSRequest("aaa*ignore*bbb","aaa3434534534534534553bbb", null);
         invokeCompareWSRequest("aaa*ignore*bb","aaa3434534534534534553bbb", null);
 
-        Throwable thrown = catchThrowable(() -> {
-            invokeCompareWSRequest("aaa*ignore*b1b", "aaa3434534534534534553bbb", null);
-        });
+        Throwable thrown = catchThrowable(() -> invokeCompareWSRequest("aaa*ignore*b1b", "aaa3434534534534534553bbb", null));
         assertThat(thrown).isInstanceOf(ComparisonException.class);
 
 
 
-        thrown = catchThrowable(() -> {
-            invokeCompareWSRequest("aaa", "aaa3434534534534534553bbb", null);
-        });
+        thrown = catchThrowable(() -> invokeCompareWSRequest("aaa", "aaa3434534534534534553bbb", null));
         assertThat(thrown).isInstanceOf(ComparisonException.class);
     }
 
@@ -55,9 +51,7 @@ public class ServiceRequestsComparatorHelperTest {
     public void compareWSRequestXMLTest(){
         invokeCompareWSRequest("<a><b>3</b></a>","<a><b>3</b></a>", null);
 
-        Throwable thrown = catchThrowable(() -> {
-            invokeCompareWSRequest("<a><b>3</b></a>", "<a><c>4</c></a>", null);
-        });
+        Throwable thrown = catchThrowable(() -> invokeCompareWSRequest("<a><b>3</b></a>", "<a><c>4</c></a>", null));
         assertThat(thrown).isInstanceOf(ComparisonException.class);
     }
 
@@ -340,9 +334,7 @@ public class ServiceRequestsComparatorHelperTest {
         }
         assertTrue(f);
 
-        Throwable thrown = catchThrowable(() -> {
-            invokeCompareWSRequest(s1, s2, null);
-        });
+        Throwable thrown = catchThrowable(() -> invokeCompareWSRequest(s1, s2, null));
         assertThat(thrown).isInstanceOf(ComparisonException.class);
     }
 
@@ -362,14 +354,12 @@ public class ServiceRequestsComparatorHelperTest {
             Method compareWSRequest = serviceRequestsComparatorHelper.getClass().getDeclaredMethod("compareWSRequest", new Class[]{String.class, String.class, Set.class});
             compareWSRequest.setAccessible(true);
             compareWSRequest.invoke(serviceRequestsComparatorHelper, s1, s2, s);
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
-            if(e.getTargetException() instanceof ComparisonException){
+            if (e.getTargetException() instanceof ComparisonException) {
                 throw (ComparisonException)e.getTargetException();
             }
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }

@@ -72,9 +72,13 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectRo createFromRo(ProjectRo projectRo) {
         Project project = new Project();
         projectRoMapper.updateProject(projectRo, project);
+
         Stand stand = new Stand();
+        stand.setWireMockUrl("http://piphagor.bscmsc.ru/bsc-wire-mock");
         stand.setProject(project);
         project.setStand(stand);
+        project.setUseRandomTestId(true);
+        project.setTestIdHeaderName("testIdHeader");
         project = projectRepository.save(project);
         return projectRoMapper.projectToProjectRo(project);
     }

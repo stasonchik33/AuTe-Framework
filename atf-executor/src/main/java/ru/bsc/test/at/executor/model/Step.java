@@ -59,8 +59,11 @@ public class Step implements Serializable, AbstractModel {
     private List<ExpectedServiceRequest> expectedServiceRequestList = new LinkedList<>();
     private String relativeUrl;
     private HTTPMethod requestMethod;
+    @Column(columnDefinition="TEXT")
     private String request;
+    @Column(columnDefinition="TEXT")
     private String requestHeaders;
+    @Column(columnDefinition="TEXT")
     private String expectedResponse;
     private Boolean expectedResponseIgnore;
     private Integer expectedStatusCode;

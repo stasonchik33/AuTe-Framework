@@ -179,7 +179,7 @@
           <div class="col-sm-6" *ngIf="calculateStepMode() == 'REST'">
             <label>{{'Request body' | translate}}:</label>
             <div *ngIf="step.requestBodyType != 'FORM'">
-              <textarea title="{{'Request body' | translate}}" class="form-control" rows="10" [(ngModel)]="step.request"></textarea>
+              <textarea title="{{'Request body' | translate}}" class="form-control" rows="10" style="font-family: monospace; font-size: smaller;" [(ngModel)]="step.request"></textarea>
             </div>
             <div *ngIf="step.requestBodyType == 'FORM'">
               <label>
@@ -209,7 +209,7 @@
           </div>
           <div class="col-sm-6" *ngIf="calculateStepMode() == 'JMS'">
             <label>{{'Request JMS body' | translate}}:</label>
-            <textarea title="{{'Request body' | translate}}" class="form-control" rows="10" [(ngModel)]="step.request"></textarea>
+            <textarea title="{{'Request body' | translate}}" class="form-control" rows="10" style="font-family: monospace; font-size: smaller;" [(ngModel)]="step.request"></textarea>
           </div>
           <div class="col-sm-6" *ngIf="calculateStepMode() == 'JMS'">
             <label>{{'Expected JMS response' | translate}}:</label>

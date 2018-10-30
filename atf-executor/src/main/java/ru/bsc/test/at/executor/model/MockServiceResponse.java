@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -48,6 +49,7 @@ public class MockServiceResponse implements AbstractModel {
     @JoinColumn(name = "step_id")
     private Step step;
     private String serviceUrl;
+    @Column(columnDefinition="TEXT")
     private String responseBody;
     private Integer httpStatus;
     private String contentType;
