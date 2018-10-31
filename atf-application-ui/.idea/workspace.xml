@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0ffc9b2d-f9a4-4e0c-a757-b649632bce1f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/scenario-detail/scenario-detail.component.html" afterPath="$PROJECT_DIR$/src/app/scenario-detail/scenario-detail.component.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/scenario-list-item/scenario-list-item.component.html" afterPath="$PROJECT_DIR$/src/app/scenario-list-item/scenario-list-item.component.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/scenario-list-item/scenario-title-item.component.html" afterPath="$PROJECT_DIR$/src/app/scenario-list-item/scenario-title-item.component.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/scenario-settings/scenario-settings.component.html" afterPath="$PROJECT_DIR$/src/app/scenario-settings/scenario-settings.component.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/scenario-settings/scenario-settings.component.ts" afterPath="$PROJECT_DIR$/src/app/scenario-settings/scenario-settings.component.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app/step-item/step-item.component.html" afterPath="$PROJECT_DIR$/src/app/step-item/step-item.component.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../atf-application/src/main/java/ru/bsc/test/autotester/mapper/ScenarioRoMapper.java" afterPath="$PROJECT_DIR$/../atf-application/src/main/java/ru/bsc/test/autotester/mapper/ScenarioRoMapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../atf-application/src/main/java/ru/bsc/test/autotester/ro/ScenarioRo.java" afterPath="$PROJECT_DIR$/../atf-application/src/main/java/ru/bsc/test/autotester/ro/ScenarioRo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../atf-executor/src/test/java/ru/bsc/test/at/executor/helper/ServiceRequestsComparatorHelperTest.java" afterPath="$PROJECT_DIR$/../atf-executor/src/test/java/ru/bsc/test/at/executor/helper/ServiceRequestsComparatorHelperTest.java" />
-    </list>
+    <list default="true" id="0ffc9b2d-f9a4-4e0c-a757-b649632bce1f" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/dist/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -75,8 +64,8 @@
       <file leaf-file-name="step-item.component.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/app/step-item/step-item.component.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+            <state relative-caret-position="249">
+              <caret line="70" column="37" lean-forward="true" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="37" />
               <folding>
                 <element signature="n#style#0;n#textarea#0;n#div#5;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -258,12 +247,12 @@
       <updated>1540405023249</updated>
       <workItem from="1540405025091" duration="5911000" />
       <workItem from="1540896985854" duration="122000" />
-      <workItem from="1540917569127" duration="4228000" />
+      <workItem from="1540917569127" duration="4790000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10261000" />
+    <option name="totallyTimeSpent" value="10823000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -727,8 +716,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/step-item/step-item.component.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+        <state relative-caret-position="249">
+          <caret line="70" column="37" lean-forward="true" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="37" />
           <folding>
             <element signature="n#style#0;n#textarea#0;n#div#5;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
           </folding>
