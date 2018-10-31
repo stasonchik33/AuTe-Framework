@@ -72,7 +72,7 @@
           <button class="btn btn-default" title="{{'Delete' | translate}}" *ngIf="showUpDownDeleteCloneButtons" (click)="deleteStep()"><span class="glyphicon glyphicon-minus"></span> {{'Delete' | translate}}</button>
           <button class="btn btn-default" title="{{'Disabled toggle' | translate}}" *ngIf="!step.disabled" (click)="disabledToggle()"><span class="glyphicon glyphicon-flag"></span> {{'Disable' | translate}}</button>
           <button class="btn btn-default" title="{{'Disabled toggle' | translate}}" style="color: red;" *ngIf="step.disabled" (click)="disabledToggle()"><span class="glyphicon glyphicon-flag"></span> {{'Disabled' | translate}}</button>
-          <button class="btn btn-success" title="{{'Clone' | translate}}" *ngIf="showUpDownDeleteCloneButtons && step.code" (click)="cloneStep()"><span class="glyphicon glyphicon-paste"></span> {{'Clone' | translate}}</button>
+          <button class="btn btn-success" title="{{'Clone' | translate}}" *ngIf="showUpDownDeleteCloneButtons && step.id" (click)="cloneStep()"><span class="glyphicon glyphicon-paste"></span> {{'Clone' | translate}}</button>
         </div>
       </div>
     </div>
@@ -205,7 +205,7 @@
           </div>
           <div class="col-sm-6" *ngIf="calculateStepMode() == 'REST'">
             <label>{{'Expected response' | translate}}:</label>
-            <textarea title="{{'Expected response' | translate}}" class="form-control" rows="10" [(ngModel)]="step.expectedResponse"></textarea>
+            <textarea title="{{'Expected response' | translate}}" class="form-control" rows="10" style="font-family: monospace; font-size: smaller;" [(ngModel)]="step.expectedResponse"></textarea>
           </div>
           <div class="col-sm-6" *ngIf="calculateStepMode() == 'JMS'">
             <label>{{'Request JMS body' | translate}}:</label>
@@ -213,7 +213,7 @@
           </div>
           <div class="col-sm-6" *ngIf="calculateStepMode() == 'JMS'">
             <label>{{'Expected JMS response' | translate}}:</label>
-            <textarea title="{{'Expected response' | translate}}" class="form-control" rows="10" [(ngModel)]="step.expectedResponse"></textarea>
+            <textarea title="{{'Expected response' | translate}}" class="form-control" rows="10" style="font-family: monospace; font-size: smaller;" [(ngModel)]="step.expectedResponse"></textarea>
           </div>
         </div>
         <div *ngIf="tab == 'scenarioVariables'">

@@ -33,6 +33,7 @@ public class ScenarioRo implements AbstractRo {
 
     private Long id;
     private Long projectId;
+    private String projectName;
     private String name;
 
     private String scenarioGroup;

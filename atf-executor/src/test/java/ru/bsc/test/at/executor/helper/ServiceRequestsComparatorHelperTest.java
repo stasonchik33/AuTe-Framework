@@ -343,15 +343,13 @@ public class ServiceRequestsComparatorHelperTest {
         String s1 = "<a><b>3</b></a>";
         String s2 = "<a><c>3</c></a>";
 
-        Throwable thrown = catchThrowable(() -> {
-            invokeCompareWSRequest(s1, s2, null);
-        });
+        Throwable thrown = catchThrowable(() -> invokeCompareWSRequest(s1, s2, null));
         assertThat(thrown).isInstanceOf(ComparisonException.class);
     }
 
     private void invokeCompareWSRequest(String s1, String s2, Set s) throws ComparisonException{
         try {
-            Method compareWSRequest = serviceRequestsComparatorHelper.getClass().getDeclaredMethod("compareWSRequest", new Class[]{String.class, String.class, Set.class});
+            Method compareWSRequest = serviceRequestsComparatorHelper.getClass().getDeclaredMethod("compareWSRequest", String.class, String.class, Set.class);
             compareWSRequest.setAccessible(true);
             compareWSRequest.invoke(serviceRequestsComparatorHelper, s1, s2, s);
         } catch (NoSuchMethodException | IllegalAccessException e) {

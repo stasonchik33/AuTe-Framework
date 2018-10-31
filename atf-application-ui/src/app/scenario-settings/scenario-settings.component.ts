@@ -20,8 +20,6 @@ import { Component, OnInit } from '@angular/core';
 import {Scenario} from '../model/scenario';
 import {ScenarioService} from '../service/scenario.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {Project} from '../model/project';
-import {ProjectService} from '../service/project.service';
 import {CustomToastyService} from '../service/custom-toasty.service';
 import {TranslateService} from '@ngx-translate/core';
 
@@ -33,13 +31,11 @@ import {TranslateService} from '@ngx-translate/core';
 export class ScenarioSettingsComponent implements OnInit {
 
   scenario: Scenario;
-  project: Project;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private scenarioService: ScenarioService,
-    private projectService: ProjectService,
     private customToastyService: CustomToastyService,
     private translate: TranslateService
   ) { }
@@ -49,13 +45,7 @@ export class ScenarioSettingsComponent implements OnInit {
 
       this.scenarioService
         .findOne(params['scenarioId'])
-        .subscribe(value => {
-          this.scenario = value;
-
-          this.projectService
-            .findOne(this.scenario.projectId)
-            .subscribe(project => this.project = project);
-        });
+        .subscribe(value => this.scenario = value);
     });
 
   }
