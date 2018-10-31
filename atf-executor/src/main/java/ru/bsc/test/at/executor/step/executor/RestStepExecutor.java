@@ -125,6 +125,7 @@ public class RestStepExecutor extends AbstractStepExecutor {
                 }
                 requestData.setRequestBody(stepResult.getRequestBody());
                 requestData.setResponseBody(responseData.getContent());
+                requestData.setResponseStatusCode(responseData.getStatusCode());
 
                 // Выполнить скрипт
                 log.debug("Executing script {}", step.getScript());
@@ -144,6 +145,8 @@ public class RestStepExecutor extends AbstractStepExecutor {
 
             stepResult.setPollingRetryCount(retryCounter);
             stepResult.setActual(responseData.getContent());
+            stepResult.setResponseStatusCode(responseData.getStatusCode());
+            stepResult.setResponseHeaders(responseData.getHeaders().toString());
             stepResult.setExpected(step.getExpectedResponse());
 
             // 4. Сохранить полученные значения

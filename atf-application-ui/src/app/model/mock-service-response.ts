@@ -17,11 +17,11 @@
  */
 
 export class MockServiceResponse {
-  code: string;
+  id: number;
   serviceUrl: string;
   responseBody: string;
   headers: HeaderItem[];
-  httpStatus: number;
+  httpStatus: string;
   contentType: number;
   userName: string;
   password: string;
@@ -31,5 +31,5 @@ export class MockServiceResponse {
 export class HeaderItem {
   headerName: string;
   headerValue: string;
-  compareType: string = 'equalTo';
+  compareType = 'equalTo';
 }

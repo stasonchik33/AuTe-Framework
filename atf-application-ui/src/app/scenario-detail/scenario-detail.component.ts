@@ -119,6 +119,7 @@ export class ScenarioDetailComponent implements OnInit {
     if (confirm('Confirm: Clone step')) {
       const index = this.stepList.indexOf(step);
       const clonedStep = Object.assign({}, step);
+      clonedStep.id = null;
       this.stepList.splice(index + 1, 0, clonedStep);
       this.customToastyService.success('Сохранено', 'Шаг склонирован');
     }

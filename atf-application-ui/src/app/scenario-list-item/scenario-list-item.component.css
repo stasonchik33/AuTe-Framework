@@ -28,7 +28,7 @@ input[type=checkbox] {
 }
 
 .passedScenario {
-  background: rgba(181, 241, 181, 0.5);
+  background: #bbe1bb;
 }
 
 .container-fluid {
@@ -61,12 +61,12 @@ input[type=checkbox] {
 
 #scenarioHeader.sticky.failedScenario,
 #scenarioHeader.full-page.failedScenario {
-  background: rgb(247, 186, 163);
+  background: rgb(212, 174, 160);
 }
 
 #scenarioHeader.sticky.passedScenario,
 #scenarioHeader.full-page.passedScenario {
-  background: rgb(181, 241, 181);
+  background: #96c296;
 }
 
 .row.result.title-result-container {

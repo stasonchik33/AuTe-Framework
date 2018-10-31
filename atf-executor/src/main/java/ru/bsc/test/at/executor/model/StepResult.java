@@ -51,6 +51,8 @@ public class StepResult {
     private List<RequestData> requestDataList;
     private Map<String, Object> scenarioVariables;
     private List<String> sqlQueryList;
+    private int responseStatusCode;
+    private String responseHeaders;
 
     public StepResult(Step step) {
         this.step = step;

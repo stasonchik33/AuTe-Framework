@@ -102,7 +102,7 @@
           </div>
           <div class="col-sm-12" style="color: gray;">
             <label>{{'Details' | translate}}</label>
-            <pre>{{stepResult.details}}</pre>
+            <pre>Response status: {{stepResult.responseStatusCode}}<br/>{{stepResult.details}}<br/>Response headers: {{stepResult.responseHeaders}}</pre>
           </div>
         </div>
       </div>

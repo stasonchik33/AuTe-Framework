@@ -26,4 +26,5 @@ import lombok.Setter;
 public class RequestDataRo {
     private String requestBody;
     private String responseBody;
+    private int responseStatusCode;
 }

@@ -45,6 +45,8 @@ public class StepResultRo {
     private boolean editable;
     private String cookies;
     private List<String> sqlQueryList;
+    private int responseStatusCode;
+    private String responseHeaders;
 
     private List<RequestDataRo> requestDataList;
 }
