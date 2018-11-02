@@ -72,7 +72,7 @@ public class AtProjectExecutor implements Executor<ProjectExecutorRequest> {
                 atScenarioExecutor.execute(
                         new ScenarioExecutorRequest(projectExecutorRequest.getProject(), scenario, projectExecutorRequest.getProject().getStand(),
                                 executorJdbcConnectionHolder.getConnection(projectExecutorRequest.getProject().getStand()),
-                                stepResultList, projectPath, projectExecutorRequest.getStopObserver())
+                                stepResultList, projectPath, projectExecutorRequest.getStopObserver(), projectExecutorRequest.getExecutionEnvironment())
                 );
             }
         }

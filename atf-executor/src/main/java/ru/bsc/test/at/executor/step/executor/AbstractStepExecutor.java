@@ -174,9 +174,7 @@ public abstract class AbstractStepExecutor implements IStepExecutor {
 
                 HashMap<String, String> headers = new HashMap<>();
                 if(mockServiceResponse.getHeaders() != null) {
-                    mockServiceResponse.getHeaders().forEach(header -> {
-                        headers.put(header.getHeaderName(), header.getHeaderValue());
-                    });
+                    mockServiceResponse.getHeaders().forEach(header -> headers.put(header.getHeaderName(), header.getHeaderValue()));
                 }
                 mockDefinition.getResponse().setHeaders(headers);
                 String contentType = StringUtils.isNoneBlank(mockServiceResponse.getContentType()) ?
@@ -287,11 +285,17 @@ public abstract class AbstractStepExecutor implements IStepExecutor {
                 String key = String.format("%%%s%%", value.getKey());
                 template = template.replaceAll(key, Matcher.quoteReplacement(value.getValue() == null ? "" : String.valueOf(value.getValue())));
             }
+            for (Map.Entry<String, Object> value : scenarioVariables.entrySet()) {
+                String key = String.format("%%%s|url%%", value.getKey());
+                try {
+                    template = template.replaceAll(key, Matcher.quoteReplacement(URLEncoder.encode(value.getValue() == null ? "" : String.valueOf(value.getValue()), "UTF-8")));
+                } catch (UnsupportedEncodingException ignored) {}
+            }
         }
         log.debug("insert saved values result {}", template);
         return template;
     }
-
+/*
     String insertSavedValuesToURL(String template, Map<String, Object> scenarioVariables) throws UnsupportedEncodingException {
         log.debug("insert saved values to URL {}, {}", template, scenarioVariables);
         if (template != null) {
@@ -303,7 +307,7 @@ public abstract class AbstractStepExecutor implements IStepExecutor {
         log.debug("insert saved values to URL result {}", template);
         return template;
     }
-
+*/
     public static String evaluateExpressions(String template, Map<String, Object> scenarioVariables, ClientResponse responseData) throws ScriptException {
         log.debug("evaluate expressions {}, {} {}", template, scenarioVariables, responseData);
         String result = template;

@@ -20,6 +20,7 @@ package ru.bsc.test.at.executor.service.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.bsc.test.at.executor.model.ExecutionEnvironment;
 import ru.bsc.test.at.executor.model.Project;
 import ru.bsc.test.at.executor.model.Scenario;
 import ru.bsc.test.at.executor.model.ScenarioResult;
@@ -39,4 +40,5 @@ public class ProjectExecutorRequest implements ExecutorRequest {
     List<ScenarioResult> scenarioResultList;
     IStopObserver stopObserver;
     IExecutingFinishObserver finishObserver;
+    ExecutionEnvironment executionEnvironment;
 }

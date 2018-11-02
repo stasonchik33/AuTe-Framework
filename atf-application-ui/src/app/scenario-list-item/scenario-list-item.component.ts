@@ -25,6 +25,8 @@ import {Step} from '../model/step';
 import { saveAs } from 'file-saver/FileSaver';
 import {StepResultItemComponent} from '../step-result-item/step-result-item.component';
 
+export const PROJECT_ENV_TOKEN = 'bsc_autotester_project_env';
+
 @Component({
   selector: 'app-scenario-list-item',
   templateUrl: './scenario-list-item.component.html',
@@ -71,7 +73,8 @@ export class ScenarioListItemComponent implements OnInit {
       this.stepResultList = [];
       this.state = 'starting';
       this.stateChanged();
-      this.scenarioService.run(this.scenario)
+      const projectEnvironmentId = parseInt(localStorage.getItem(PROJECT_ENV_TOKEN + this.projectId), 10);
+      this.scenarioService.run(this.scenario, projectEnvironmentId)
         .subscribe(startScenarioInfo => {
           this.startScenarioInfo = startScenarioInfo;
           this.state = 'executing';

@@ -64,6 +64,8 @@ public class Project implements Serializable, AbstractModel {
     private Long mqCheckInterval;
     private Integer mqCheckCount;
     private String directoryPath;
+    @OneToMany(mappedBy = "project", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<ExecutionEnvironment> executionEnvironmentList;
 
     public Project copy() {
         Project project = new Project();
@@ -98,6 +100,13 @@ public class Project implements Serializable, AbstractModel {
         }
         if (getAmqpBroker() != null) {
             project.setAmqpBroker(getAmqpBroker().copy());
+        }
+        if (getExecutionEnvironmentList() != null) {
+            project.setExecutionEnvironmentList(new LinkedList<>());
+            getExecutionEnvironmentList().forEach(executionEnvironment -> {
+                ExecutionEnvironment env = executionEnvironment.copy();
+                project.getExecutionEnvironmentList().add(env);
+            });
         }
         return project;
     }

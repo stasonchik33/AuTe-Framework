@@ -18,6 +18,7 @@
 
 package ru.bsc.test.autotester.launcher.api;
 
+import ru.bsc.test.at.executor.model.ExecutionEnvironment;
 import ru.bsc.test.at.executor.model.Project;
 import ru.bsc.test.at.executor.model.Scenario;
 import ru.bsc.test.autotester.model.ExecutionResult;
@@ -38,5 +39,6 @@ public interface ScenarioLauncher {
                             Project project,
                             ExecutionResult executionResult,
                             Set<String> stopExecutingSet,
-                            String runningUuid);
+                            String runningUuid,
+                            ExecutionEnvironment executionEnvironment);
 }

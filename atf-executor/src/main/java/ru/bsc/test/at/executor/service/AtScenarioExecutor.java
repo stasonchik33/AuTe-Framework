@@ -24,6 +24,7 @@ import org.springframework.util.Assert;
 import ru.bsc.test.at.executor.exception.ScenarioStopException;
 import ru.bsc.test.at.executor.helper.client.impl.http.HttpClient;
 import ru.bsc.test.at.executor.helper.client.impl.mq.MqClient;
+import ru.bsc.test.at.executor.model.ExecutionEnvironment;
 import ru.bsc.test.at.executor.model.Project;
 import ru.bsc.test.at.executor.model.Scenario;
 import ru.bsc.test.at.executor.service.api.Executor;
@@ -31,9 +32,7 @@ import ru.bsc.test.at.executor.service.api.ScenarioExecutorRequest;
 import ru.bsc.test.at.executor.service.api.StepExecutorRequest;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author Pavel Golovkin
@@ -50,6 +49,11 @@ public class AtScenarioExecutor implements Executor<ScenarioExecutorRequest> {
         AtStepExecutor atStepExecutor = new AtStepExecutor();
 
         Project project = scenarioExecutorRequest.getProject();
+        ExecutionEnvironment env = scenarioExecutorRequest.getExecutionEnvironment();
+        if (env != null && env.getEnvironmentVariableList() != null) {
+            env.getEnvironmentVariableList()
+                    .forEach(environmentVariable -> scenarioVariables.put(environmentVariable.getKey(), environmentVariable.getValue()));
+        }
         try (
                 HttpClient httpClient = new HttpClient();
                 MqClient mqClient = project.getAmqpBroker() != null ? new MqClient(project.getAmqpBroker()) : null

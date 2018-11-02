@@ -94,7 +94,7 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public StartScenarioInfoRo startScenarioExecutingList(Project project, List<Scenario> scenarioList) {
+    public StartScenarioInfoRo startScenarioExecutingList(Project project, List<Scenario> scenarioList, Long environmentId) {
         loadBeforeAndAfterScenarios(project, scenarioList);
         StartScenarioInfoRo startScenarioInfoRo = new StartScenarioInfoRo();
 
@@ -112,7 +112,14 @@ public class ScenarioServiceImpl implements ScenarioService {
         }).collect(Collectors.toList());
         Project newProject = project.copyWithoutScenarios();
         newProject.setId(project.getId());
-        scenarioLauncher.launchScenarioFromUI(scenarioListCopy, newProject, executionResult, stopExecutingSet, runningUuid);
+        ExecutionEnvironment env = null;
+        if (environmentId != null && project.getExecutionEnvironmentList() != null) {
+            env = project.getExecutionEnvironmentList()
+                    .stream()
+                    .filter(executionEnvironment -> environmentId.equals(executionEnvironment.getId()))
+                    .findAny().orElse(null);
+        }
+        scenarioLauncher.launchScenarioFromUI(scenarioListCopy, newProject, executionResult, stopExecutingSet, runningUuid, env);
         return startScenarioInfoRo;
     }
 

@@ -41,4 +41,5 @@ public class ProjectRo implements AbstractRo {
     private String testIdHeaderName;
     private AmqpBrokerRo amqpBroker;
     private String directoryPath;
+    private List<ExecutionEnvironmentRo> executionEnvironmentList;
 }

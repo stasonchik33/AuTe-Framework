@@ -38,10 +38,13 @@ export class ScenarioService {
     private http: Http
   ) { }
 
-  run(scenario: Scenario): Observable<StartScenarioInfo> {
+  run(scenario: Scenario, executionEnvironmentId: number): Observable<StartScenarioInfo> {
     return this.http.post(
-      this.globals.serviceBaseUrl + this.serviceUrl + '/' + scenario.id + '/start',
-      {},
+      this.globals.serviceBaseUrl + this.serviceUrl + '/start',
+      {
+        scenarioId: scenario.id,
+        executionEnvironmentId: executionEnvironmentId
+      },
       {headers: this.headers}
     ).map(value => value.json() as StartScenarioInfo);
   }

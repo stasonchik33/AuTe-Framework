@@ -22,7 +22,7 @@ import {Project} from '../model/project';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import {Scenario} from '../model/scenario';
-import {ScenarioListItemComponent} from '../scenario-list-item/scenario-list-item.component';
+import {PROJECT_ENV_TOKEN, ScenarioListItemComponent} from '../scenario-list-item/scenario-list-item.component';
 import { saveAs } from 'file-saver/FileSaver';
 import {CustomToastyService} from '../service/custom-toasty.service';
 import {ScenarioService} from '../service/scenario.service';
@@ -42,6 +42,7 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
   failCount = 0;
   Math: any;
   newScenarioName = '';
+  selectedEnvironmentId: number;
 
   @ViewChildren(ScenarioListItemComponent) scenarioComponentList: QueryList<ScenarioListItemComponent>;
   executingStateExecuted = 0;
@@ -63,6 +64,7 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
       .switchMap((params: ParamMap) => this.projectService.findOne(parseInt(params.get('projectId'), 10)))
       .subscribe(value => {
         this.project = value;
+        this.selectedEnvironmentId = parseInt(localStorage.getItem(PROJECT_ENV_TOKEN + this.project.id), 10);
       });
 
     this.route.paramMap
@@ -70,6 +72,10 @@ export class ProjectDetailComponent implements OnInit, AfterContentChecked {
       .subscribe(value => {
         this.scenarioList = value;
       });
+  }
+
+  changeEnv(): void {
+    localStorage.setItem(PROJECT_ENV_TOKEN + this.project.id, String(this.selectedEnvironmentId));
   }
 
   ngAfterContentChecked(): void {

@@ -26,6 +26,7 @@ import ru.bsc.test.autotester.mapper.ScenarioRoMapper;
 import ru.bsc.test.autotester.mapper.StepRoMapper;
 import ru.bsc.test.autotester.ro.ScenarioRo;
 import ru.bsc.test.autotester.ro.StartScenarioInfoRo;
+import ru.bsc.test.autotester.ro.StartScenarioRo;
 import ru.bsc.test.autotester.ro.StepRo;
 import ru.bsc.test.autotester.service.ScenarioService;
 
@@ -95,11 +96,11 @@ public class RestScenarioController {
         return scenarioService.updateStepListFromRo(scenarioId, stepRoList);
     }
 
-    @RequestMapping(value = "{scenarioId}/start", method = RequestMethod.POST)
-    public StartScenarioInfoRo executing(@PathVariable Long scenarioId) {
-        Scenario scenario = scenarioService.findOne(scenarioId);
+    @RequestMapping(value = "start", method = RequestMethod.POST)
+    public StartScenarioInfoRo executing(@RequestBody StartScenarioRo startScenario) {
+        Scenario scenario = scenarioService.findOne(startScenario.getScenarioId());
         if (scenario != null) {
-            return scenarioService.startScenarioExecutingList(scenario.getProject(), Collections.singletonList(scenario));
+            return scenarioService.startScenarioExecutingList(scenario.getProject(), Collections.singletonList(scenario), startScenario.getExecutionEnvironmentId());
         }
         throw new ResourceNotFoundException();
     }

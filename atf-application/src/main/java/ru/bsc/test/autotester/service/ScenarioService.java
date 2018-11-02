@@ -39,7 +39,7 @@ public interface ScenarioService {
 
     List<StepRo> updateStepListFromRo(Long id, List<StepRo> stepRoList);
 
-    StartScenarioInfoRo startScenarioExecutingList(Project project, List<Scenario> scenarioList);
+    StartScenarioInfoRo startScenarioExecutingList(Project project, List<Scenario> scenarioList, Long environmentId);
 
     void stopExecuting(String executingUuid);
 

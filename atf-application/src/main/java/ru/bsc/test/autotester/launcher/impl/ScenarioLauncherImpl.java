@@ -21,6 +21,7 @@ package ru.bsc.test.autotester.launcher.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bsc.test.at.executor.model.ExecutionEnvironment;
 import ru.bsc.test.at.executor.model.Project;
 import ru.bsc.test.at.executor.model.Scenario;
 import ru.bsc.test.at.executor.model.ScenarioResult;
@@ -55,7 +56,8 @@ public class ScenarioLauncherImpl implements ScenarioLauncher {
             Project project,
             ExecutionResult executionResult,
             Set<String> stopExecutingSet,
-            String runningUuid
+            String runningUuid,
+            ExecutionEnvironment executionEnvironment
     ) {
         log.info("Launch scenario from UI {} {}", scenarioToExecute, project);
         AtProjectExecutor atExecutor = new AtProjectExecutor(Paths.get(project.getDirectoryPath(), project.getId().toString())
@@ -69,7 +71,7 @@ public class ScenarioLauncherImpl implements ScenarioLauncher {
                     processResults(scenarioResults);
                 }
             };
-            atExecutor.execute(new ProjectExecutorRequest(project, scenarioToExecute, executionResult.getScenarioResults(), stopObserver, finishObserver));
+            atExecutor.execute(new ProjectExecutorRequest(project, scenarioToExecute, executionResult.getScenarioResults(), stopObserver, finishObserver, executionEnvironment));
         }).start();
     }
 

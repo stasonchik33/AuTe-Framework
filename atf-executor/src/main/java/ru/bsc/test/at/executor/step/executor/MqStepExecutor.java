@@ -56,7 +56,7 @@ public class MqStepExecutor extends AbstractStepExecutor {
         sendMessagesToQuery(project, step, scenarioVariables, mqClient, project.getTestIdHeaderName(), testId);
 
         // 2. Подстановка сохраненных параметров в строку запроса
-        String requestUrl = stand.getServiceUrl() + insertSavedValuesToURL(step.getRelativeUrl(), scenarioVariables);
+        String requestUrl = stand.getServiceUrl() + insertSavedValues(step.getRelativeUrl(), scenarioVariables);
         stepResult.setRequestUrl(requestUrl);
 
         // 2.1 Подстановка сохраненных параметров в тело запроса

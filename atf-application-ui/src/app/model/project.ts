@@ -18,6 +18,7 @@
 
 import {Stand} from './stand';
 import {AmqpBroker} from './amqp-broker';
+import {ExecutionEnvironment} from "./execution-environment";
 
 export class Project {
   id: number;
@@ -29,4 +30,5 @@ export class Project {
   testIdHeaderName: string;
   amqpBroker: AmqpBroker;
   groupList: string[];
+  executionEnvironmentList: ExecutionEnvironment[];
 }
