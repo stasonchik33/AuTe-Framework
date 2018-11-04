@@ -213,7 +213,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         List<Scenario> scenarios = new ArrayList<>();
         if (!StringUtils.isEmpty(projectSearchRo.getRelativeUrl())) {
             HashSet<Scenario> scenarioSet = new HashSet<>();
-            stepRepository.findByRelativeUrl(projectSearchRo.getRelativeUrl()).forEach(step -> scenarioSet.add(step.getScenario()));
+            stepRepository.findByRelativeUrlLike('%' + projectSearchRo.getRelativeUrl() + '%').forEach(step -> scenarioSet.add(step.getScenario()));
             scenarios = new ArrayList<>(scenarioSet);
         }
         return scenarioRoMapper.convertScenarioListToScenarioRoList(scenarios);
