@@ -26,6 +26,7 @@ import lombok.Setter;
 public class FormDataRo implements AbstractRo {
     private static final long serialVersionUID = -7730693222002977456L;
 
+    private Long id;
     private String fieldName;
     private String fieldType;
     private String value;

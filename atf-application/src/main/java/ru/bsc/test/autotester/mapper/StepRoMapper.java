@@ -50,6 +50,7 @@ public abstract class StepRoMapper {
             @Mapping(target = "stepParameterSetList", ignore = true),
             @Mapping(target = "expectedServiceRequestList", ignore = true),
             @Mapping(target = "mockServiceResponseList", ignore = true),
+            @Mapping(target = "formDataList", ignore = true),
             @Mapping(target = "sqlDataList", ignore = true),
     })
     public abstract void updateStepFromRo(StepRo stepRo, @MappingTarget Step step);
@@ -146,6 +147,28 @@ public abstract class StepRoMapper {
                 .collect(Collectors.toList())
         );
 
+        if (step.getFormDataList() == null) {
+            step.setFormDataList(new LinkedList<>());
+        }
+        if (stepRo.getFormDataList() == null) {
+            stepRo.setFormDataList(new LinkedList<>());
+        }
+        List<FormData> stepFormDataList = new LinkedList<>(step.getFormDataList());
+        step.getFormDataList().clear();
+        step.getFormDataList().addAll(stepRo.getFormDataList().stream()
+                .map(ro -> stepFormDataList.stream()
+                        .filter(formData -> Objects.equals(formData.getId(), ro.getId()))
+                        .map(domain -> updateFormData(ro, domain))
+                        .findAny()
+                        .orElseGet(() -> {
+                            FormData newDomain = new FormData();
+                            updateFormData(ro, newDomain);
+                            newDomain.setStep(step);
+                            return newDomain;
+                        }))
+                .collect(Collectors.toList())
+        );
+
         return step;
     }
 
@@ -160,8 +183,6 @@ public abstract class StepRoMapper {
     abstract SqlData to(SqlDataRo ro);
 
     abstract SqlDataRo to(SqlData ro);
-
-    abstract List<FormData> formDataRoListToFormData(List<FormDataRo> formDataRoList);
 
     public abstract StepRo stepToStepRo(Step step);
 
@@ -277,9 +298,7 @@ public abstract class StepRoMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "step", ignore = true),
     })
-    abstract FormData updateFormDataFromRo(FormDataRo formDataRo);
-
-    abstract List<FormDataRo> convertFormDataListToRo(List<FormData> formDataList);
+    abstract FormData updateFormData(FormDataRo formDataRo, @MappingTarget FormData domain);
 
     abstract FormDataRo formDataToRo(FormData formData);
 
